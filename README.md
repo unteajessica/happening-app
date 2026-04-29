@@ -1,10 +1,3 @@
-Because that version was not clean GitHub-flavored Markdown.
-
-I included extra block metadata like `id="..."` inside fenced code blocks, and that can break rendering in some editors/viewers, so the README looks like it “stops” or formats weirdly.
-
-Use a plain `README.md` with normal markdown only. Here is a clean version you can paste directly:
-
-````md
 # Happening App
 
 Happening App is a fullstack event management and discovery platform built to showcase both frontend and backend development. It allows users to browse events, view detailed information, manage favorites, create and edit events, explore statistics, interact with event comments, and visualize live event updates.
@@ -561,7 +554,3 @@ Use the Split View page to:
 
 Built as a fullstack academic project to demonstrate frontend, backend, API design, offline resilience, real-time communication, and data relationship modeling.
 
-```
-
-The reason it “stopped” before was just malformed markdown. This version should render normally end to end.
-```
