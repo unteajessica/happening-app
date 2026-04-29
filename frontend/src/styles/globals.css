@@ -1,0 +1,58 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background-color: #d9d9d9;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+#root {
+    min-height: 100vh;
+}
+
+.page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f3f1ee;
+}
+
+.app-shell.page {
+    align-items: stretch;
+}
+
+.logo-image {
+    display: block;
+}
+
+.primary-button {
+    border: none;
+    border-radius: 8px;
+    background-color: #a684eb;
+    color: #f3f1ee;
+    font-family: inherit;
+    font-size: clamp(1rem, 2vw, 1.5rem); ;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.primary-button:hover {
+    opacity: 0.92;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+@keyframes pageFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.app-shell {
+    animation: pageFadeIn 0.5s ease forwards;
+}

@@ -1,0 +1,114 @@
+.section-page {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 20px 24px 24px;
+}
+
+.section-page-hero {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 18px;
+}
+
+.section-page-hero-text {
+    max-width: 720px;
+}
+
+.section-page-eyebrow {
+    margin: 0 0 6px;
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8c7e73;
+}
+
+.section-page-title {
+    margin: 0;
+    font-size: clamp(2.5rem, 4vw, 4rem);
+    line-height: 0.95;
+    font-weight: 700;
+    color: #171717;
+    letter-spacing: -0.03em;
+}
+
+.section-page-description {
+    margin: 14px 0 0;
+    max-width: 620px;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #4f4a45;
+}
+
+.section-page-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    padding-top: 4px;
+}
+
+.section-page-insights {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.section-insight-card {
+    background: rgba(255, 255, 255, 0.58);
+    border: 1px solid #e4ddd5;
+    border-radius: 16px;
+    padding: 14px 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
+}
+
+.section-insight-label {
+    display: block;
+    font-size: 0.82rem;
+    color: #8c7e73;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.section-insight-value {
+    font-size: 1.5rem;
+    color: #171717;
+    font-weight: 700;
+}
+
+@media (max-width: 980px) {
+    .section-page {
+        padding: 18px 18px 20px;
+    }
+
+    .section-page-hero {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .section-page-actions {
+        padding-top: 0;
+    }
+
+    .section-page-insights {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    .section-page-insights {
+        grid-template-columns: 1fr;
+    }
+
+    .section-page-title {
+        font-size: 2.4rem;
+    }
+
+    .section-page-description {
+        font-size: 0.95rem;
+    }
+}
