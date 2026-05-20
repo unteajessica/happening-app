@@ -16,15 +16,22 @@ Users can:
 * browse events in cards view
 * open event details
 * search/filter events
-* view event metadata
+* view statistics
 * view event comments
+* add comments
 * mark events as favorites
+* play Pick Your Night game
+* use the real-time chat
 
 Admins can also:
 
 * create events
 * update events
 * delete events
+* delete comments
+* view action logs
+* view suspicious users
+* delete chat messages
 
 ---
 
@@ -68,37 +75,6 @@ ADMIN
 USER
 ```
 
-Admin users can:
-
-* create events
-* edit events
-* delete events
-* delete comments
-* view action logs
-* view suspicious users
-* review/dismiss suspicious users
-* delete chat messages
-
-Regular users can:
-
-* view events
-* view event details
-* add comments
-* use favorites
-* play Pick Your Night
-* use chat
-* view statistics
-
-Regular users cannot:
-
-* create/edit/delete events
-* delete comments
-* view logs
-* view the observation list
-* delete chat
-
----
-
 ### Comments system
 
 Each event can have many comments.
@@ -114,7 +90,7 @@ Users can:
 * view comments
 * add comments
 
-Admins can:
+Admins can also:
 
 * delete comments
 
@@ -292,8 +268,6 @@ The frontend communicates with the backend over HTTPS:
 ```text
 https://172.20.10.3:3000
 ```
-
-This satisfies the requirement that the server and client run on different machines on the same LAN or hotspot.
 
 ---
 
@@ -1177,7 +1151,7 @@ Open this file in the browser to inspect coverage by file.
 
 ## Demo Checklist
 
-Before presenting:
+Final Checklist:
 
 ```text
 1. Start PostgreSQL service.
@@ -1193,63 +1167,6 @@ Before presenting:
 11. Show Observation List.
 12. Run test coverage.
 13. Reset database with npx prisma db seed.
-```
-
----
-
-## Presentation Notes
-
-### Where is authentication implemented?
-
-```text
-backend/src/controllers/auth.controller.ts
-backend/src/utils/authToken.ts
-backend/src/middleware/authenticateToken.ts
-frontend/src/context/AuthContext.tsx
-```
-
-### Where is authorization implemented?
-
-```text
-backend/src/middleware/requirePermission.ts
-frontend/src/components/RequirePermission.tsx
-```
-
-### Where is chat implemented?
-
-```text
-backend/src/socket.ts
-backend/src/controllers/chat.controller.ts
-backend/src/models/chatMessage.model.ts
-frontend/src/pages/ChatPage.tsx
-frontend/src/services/chatApi.ts
-```
-
-### Where are logs implemented?
-
-```text
-backend/src/services/log.service.ts
-backend/src/controllers/logs.controller.ts
-backend/prisma/schema.prisma
-```
-
-### Where is suspicious activity detected?
-
-```text
-backend/src/services/suspicious.service.ts
-frontend/src/pages/ObservationListPage.tsx
-```
-
-### Where are statistics calculated?
-
-```text
-backend/src/controllers/stats.controller.ts
-```
-
-### Where are events saved?
-
-```text
-backend/src/controllers/events.controller.ts
 ```
 
 ---
