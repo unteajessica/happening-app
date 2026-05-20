@@ -1200,6 +1200,3 @@ Built as a fullstack academic project to demonstrate:
 * testing and coverage
 * suspicious activity detection
 * admin monitoring tools
-
-```
-```
