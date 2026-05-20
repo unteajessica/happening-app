@@ -1,0 +1,172 @@
+.observation-page {
+    min-height: calc(100vh - 80px);
+    padding: 2rem;
+}
+
+.observation-hero,
+.observation-card {
+    width: min(100%, 1180px);
+    margin: 0 auto 1.5rem;
+    background: #ffffff;
+    border-radius: 28px;
+    padding: 2rem;
+    box-shadow: 0 24px 60px rgba(17, 17, 17, 0.08);
+}
+
+.observation-hero h1 {
+    margin: 0;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+}
+
+.observation-hero p {
+    color: #666666;
+    max-width: 680px;
+}
+
+.observation-kicker {
+    color: #9b7bd8;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.75rem;
+    margin: 0 0 0.35rem;
+}
+
+.observation-error {
+    width: min(100%, 1180px);
+    margin: 0 auto 1.5rem;
+    background: #fff0f0;
+    color: #c0392b;
+    border-radius: 16px;
+    padding: 1rem;
+    font-weight: 700;
+}
+
+.observation-card-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 1.2rem;
+}
+
+.observation-card-header h2 {
+    margin: 0;
+}
+
+.observation-count {
+    background: #f4edff;
+    color: #6e49bc;
+    border-radius: 999px;
+    padding: 0.55rem 0.9rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.observation-empty {
+    color: #777777;
+    margin: 0;
+}
+
+.observation-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.observation-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+}
+
+.observation-table th,
+.observation-table td {
+    padding: 0.9rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #eee7fa;
+    vertical-align: top;
+}
+
+.observation-table th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #777777;
+}
+
+.observation-table td span {
+    display: block;
+    color: #777777;
+    font-size: 0.8rem;
+    margin-top: 0.2rem;
+}
+
+.status-pill,
+.action-pill {
+    display: inline-flex;
+    border-radius: 999px;
+    padding: 0.4rem 0.65rem;
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
+.status-active {
+    background: #fff0f0;
+    color: #c0392b;
+}
+
+.status-reviewed {
+    background: #eef8ef;
+    color: #247a35;
+}
+
+.status-dismissed {
+    background: #f0f0f0;
+    color: #555555;
+}
+
+.action-pill {
+    background: #f4edff;
+    color: #6e49bc;
+}
+
+.observation-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.observation-actions button {
+    border: 1px solid #e5d8f5;
+    background: #ffffff;
+    color: #6e49bc;
+    border-radius: 999px;
+    padding: 0.55rem 0.8rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.observation-actions button:hover:not(:disabled) {
+    background: #f4edff;
+}
+
+.observation-actions button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+@media (max-width: 700px) {
+    .observation-page {
+        padding: 1rem;
+    }
+
+    .observation-hero,
+    .observation-card {
+        padding: 1.25rem;
+        border-radius: 22px;
+    }
+
+    .observation-card-header {
+        flex-direction: column;
+    }
+}

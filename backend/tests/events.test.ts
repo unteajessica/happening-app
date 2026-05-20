@@ -1,12 +1,27 @@
 import request from "supertest";
 import app from "../src/app";
-import { resetEvents } from "../src/data/events.memory";
+import "./setupDatabase";
 
-describe("Events API", () => {
-    beforeEach(() => {
-        resetEvents();
+let adminToken: string;
+let userToken: string;
+
+beforeAll(async () => {
+    const adminLogin = await request(app).post("/auth/login").send({
+        email: "admin@test.com",
+        password: "admin123",
     });
 
+    adminToken = adminLogin.body.token;
+
+    const userLogin = await request(app).post("/auth/login").send({
+        email: "user@test.com",
+        password: "user123",
+    });
+
+    userToken = userLogin.body.token;
+});
+
+describe("Events API", () => {
     describe("GET /events", () => {
         it("should return all events with pagination info", async () => {
             const response = await request(app).get("/events?page=1&limit=10");
@@ -40,7 +55,7 @@ describe("Events API", () => {
     });
 
     describe("POST /events", () => {
-        it("should create a new event with valid data", async () => {
+        it("should create a new event with valid data when admin is authenticated", async () => {
             const newEvent = {
                 title: "Book Fair 2",
                 category: "Exhibition",
@@ -48,14 +63,60 @@ describe("Events API", () => {
                 location: "City Hall",
                 price: "Free",
                 description: "A fair with books, talks, and local publishers.",
-                imageUrl: "https://example.com/bookfair.jpg"
+                imageUrl: "https://example.com/bookfair.jpg",
             };
 
-            const response = await request(app).post("/events").send(newEvent);
+            const response = await request(app)
+                .post("/events")
+                .set("Authorization", `Bearer ${adminToken}`)
+                .send(newEvent);
 
             expect(response.status).toBe(201);
             expect(response.body).toHaveProperty("id");
             expect(response.body).toHaveProperty("title", "Book Fair 2");
+        });
+
+        it("should return 401 when creating event without token", async () => {
+            const newEvent = {
+                title: "No Token Event",
+                category: "Test",
+                date: "22-05-2026",
+                location: "Test Location",
+                price: "$10",
+                description: "This should fail without token.",
+                imageUrl: "https://example.com/test.jpg",
+            };
+
+            const response = await request(app).post("/events").send(newEvent);
+
+            expect(response.status).toBe(401);
+            expect(response.body).toHaveProperty(
+                "message",
+                "Authorization token is required."
+            );
+        });
+
+        it("should return 403 when normal user tries to create event", async () => {
+            const newEvent = {
+                title: "Forbidden User Event",
+                category: "Test",
+                date: "22-05-2026",
+                location: "Test Location",
+                price: "$10",
+                description: "Normal user should not create events.",
+                imageUrl: "https://example.com/test.jpg",
+            };
+
+            const response = await request(app)
+                .post("/events")
+                .set("Authorization", `Bearer ${userToken}`)
+                .send(newEvent);
+
+            expect(response.status).toBe(403);
+            expect(response.body).toHaveProperty(
+                "message",
+                "You do not have permission to perform this action."
+            );
         });
 
         it("should return 400 when a required field is missing", async () => {
@@ -66,10 +127,13 @@ describe("Events API", () => {
                 location: "City Hall",
                 price: "Free",
                 description: "A fair with books.",
-                imageUrl: "https://example.com/bookfair.jpg"
+                imageUrl: "https://example.com/bookfair.jpg",
             };
 
-            const response = await request(app).post("/events").send(invalidEvent);
+            const response = await request(app)
+                .post("/events")
+                .set("Authorization", `Bearer ${adminToken}`)
+                .send(invalidEvent);
 
             expect(response.status).toBe(400);
         });
@@ -82,18 +146,24 @@ describe("Events API", () => {
                 location: "Another Park",
                 price: "$30",
                 description: "Duplicate title test.",
-                imageUrl: "https://example.com/jazz.jpg"
+                imageUrl: "https://example.com/jazz.jpg",
             };
 
-            const response = await request(app).post("/events").send(duplicateEvent);
+            const response = await request(app)
+                .post("/events")
+                .set("Authorization", `Bearer ${adminToken}`)
+                .send(duplicateEvent);
 
             expect(response.status).toBe(400);
-            expect(response.body).toHaveProperty("message", "This title already exists.");
+            expect(response.body).toHaveProperty(
+                "message",
+                "This title already exists."
+            );
         });
     });
 
     describe("PUT /events/:id", () => {
-        it("should update an existing event", async () => {
+        it("should update an existing event when admin is authenticated", async () => {
             const updatedEvent = {
                 title: "Jazz In The Park Updated",
                 category: "Music",
@@ -101,15 +171,43 @@ describe("Events API", () => {
                 location: "Central Park",
                 price: "$25",
                 description: "Updated description.",
-                imageUrl: "https://example.com/jazz-updated.jpg"
+                imageUrl: "https://example.com/jazz-updated.jpg",
             };
 
-            const response = await request(app).put("/events/1").send(updatedEvent);
+            const response = await request(app)
+                .put("/events/1")
+                .set("Authorization", `Bearer ${adminToken}`)
+                .send(updatedEvent);
 
             expect(response.status).toBe(200);
             expect(response.body).toHaveProperty("id", 1);
-            expect(response.body).toHaveProperty("title", "Jazz In The Park Updated");
+            expect(response.body).toHaveProperty(
+                "title",
+                "Jazz In The Park Updated"
+            );
             expect(response.body).toHaveProperty("price", "$25");
+        });
+
+        it("should return 401 when updating event without token", async () => {
+            const updatedEvent = {
+                title: "No Token Update",
+                category: "Music",
+                date: "21-05-2026",
+                location: "Central Park",
+                price: "$25",
+                description: "This should fail without token.",
+                imageUrl: "https://example.com/jazz-updated.jpg",
+            };
+
+            const response = await request(app)
+                .put("/events/1")
+                .send(updatedEvent);
+
+            expect(response.status).toBe(401);
+            expect(response.body).toHaveProperty(
+                "message",
+                "Authorization token is required."
+            );
         });
 
         it("should return 404 when trying to update a missing event", async () => {
@@ -120,10 +218,13 @@ describe("Events API", () => {
                 location: "Central Park",
                 price: "$25",
                 description: "Updated description.",
-                imageUrl: "https://example.com/jazz-updated.jpg"
+                imageUrl: "https://example.com/jazz-updated.jpg",
             };
 
-            const response = await request(app).put("/events/999").send(updatedEvent);
+            const response = await request(app)
+                .put("/events/999")
+                .set("Authorization", `Bearer ${adminToken}`)
+                .send(updatedEvent);
 
             expect(response.status).toBe(404);
             expect(response.body).toHaveProperty("message", "Event not found.");
@@ -137,26 +238,49 @@ describe("Events API", () => {
                 location: "Central Park",
                 price: "$25",
                 description: "Duplicate update test.",
-                imageUrl: "https://example.com/jazz-updated.jpg"
+                imageUrl: "https://example.com/jazz-updated.jpg",
             };
 
-            const response = await request(app).put("/events/1").send(updatedEvent);
+            const response = await request(app)
+                .put("/events/1")
+                .set("Authorization", `Bearer ${adminToken}`)
+                .send(updatedEvent);
 
             expect(response.status).toBe(400);
-            expect(response.body).toHaveProperty("message", "This title already exists.");
+            expect(response.body).toHaveProperty(
+                "message",
+                "This title already exists."
+            );
         });
     });
 
     describe("DELETE /events/:id", () => {
-        it("should delete an existing event", async () => {
-            const response = await request(app).delete("/events/1");
+        it("should delete an existing event when admin is authenticated", async () => {
+            const response = await request(app)
+                .delete("/events/1")
+                .set("Authorization", `Bearer ${adminToken}`);
 
             expect(response.status).toBe(200);
-            expect(response.body).toHaveProperty("message", "Event deleted successfully.");
+            expect(response.body).toHaveProperty(
+                "message",
+                "Event deleted successfully."
+            );
+        });
+
+        it("should return 401 when deleting event without token", async () => {
+            const response = await request(app).delete("/events/1");
+
+            expect(response.status).toBe(401);
+            expect(response.body).toHaveProperty(
+                "message",
+                "Authorization token is required."
+            );
         });
 
         it("should return 404 when trying to delete a missing event", async () => {
-            const response = await request(app).delete("/events/999");
+            const response = await request(app)
+                .delete("/events/999")
+                .set("Authorization", `Bearer ${adminToken}`);
 
             expect(response.status).toBe(404);
             expect(response.body).toHaveProperty("message", "Event not found.");

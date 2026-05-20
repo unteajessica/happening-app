@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const logs_controller_1 = require("../controllers/logs.controller");
+const requirePermission_1 = require("../middleware/requirePermission");
+const authenticateToken_1 = require("../middleware/authenticateToken");
+const router = (0, express_1.Router)();
+router.get("/", authenticateToken_1.authenticateToken, (0, requirePermission_1.requirePermission)("logs:read"), logs_controller_1.getActionLogs);
+router.get("/suspicious-users", authenticateToken_1.authenticateToken, (0, requirePermission_1.requirePermission)("suspicious-users:read"), logs_controller_1.getSuspiciousUsers);
+router.put("/suspicious-users/:id/review", authenticateToken_1.authenticateToken, (0, requirePermission_1.requirePermission)("suspicious-users:update"), logs_controller_1.markSuspiciousUserReviewed);
+router.put("/suspicious-users/:id/dismiss", authenticateToken_1.authenticateToken, (0, requirePermission_1.requirePermission)("suspicious-users:update"), logs_controller_1.dismissSuspiciousUser);
+exports.default = router;

@@ -11,6 +11,8 @@ import StatisticsPage from './pages/StatisticsPage'
 import FavoritesPage from './pages/FavoritesPage'
 import PickYourNightPage from './pages/PickYourNightPage'
 import SpliViewPage from './pages/SplitViewPage'
+import ChatPage from "./pages/ChatPage";
+import ObservationListPage from "./pages/ObservationListPage";
 
 function App() {
   return (
@@ -28,6 +30,8 @@ function App() {
       <Route path="/favorites-page" element={<FavoritesPage/>} />
       <Route path="/pick-your-night" element={<PickYourNightPage/>} />
       <Route path='/split-view' element={<SpliViewPage/>} />
+      <Route path="/chat" element={<ChatPage />} />
+      <Route path="/observation-list" element={<ObservationListPage />} />
     </Routes>
   )
 }

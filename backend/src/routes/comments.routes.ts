@@ -3,14 +3,25 @@ import {
     getCommentsByEventId,
     createComment,
     deleteComment,
-    getCommentStats,
 } from "../controllers/comments.controller";
+import { requirePermission } from "../middleware/requirePermission";
+import { authenticateToken } from "../middleware/authenticateToken";
 
 const router = Router();
 
 router.get("/event/:eventId", getCommentsByEventId);
-router.post("/", createComment);
-router.delete("/:commentId", deleteComment);
-router.get("/stats", getCommentStats);
+router.post(
+    "/",
+    authenticateToken,
+    requirePermission("comments:create"),
+    createComment
+);
+
+router.delete(
+    "/:commentId",
+    authenticateToken,
+    requirePermission("comments:delete"),
+    deleteComment
+);
 
 export default router;

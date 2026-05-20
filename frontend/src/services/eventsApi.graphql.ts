@@ -1,7 +1,7 @@
 import type { EventItem } from "../types/event";
 import type { CommentItem, CommentInput } from "../types/comment";
 
-const GRAPHQL_URL = "http://localhost:3000/graphql";
+const GRAPHQL_URL =  import.meta.env.VITE_API_URL || "http://localhost:3000/graphql";
 
 type GraphQLResponse<T> = {
     data?: T;
@@ -14,6 +14,26 @@ export type EventsPageResponse = {
     limit: number;
     total: number;
     totalPages: number;
+};
+
+export type CommentStatsResponse = {
+    totalComments: number;
+    commentsByEvent: {
+        eventId: number;
+        eventTitle: string;
+        commentCount: number;
+    }[];
+    mostCommentedEvents: {
+        eventId: number;
+        eventTitle: string;
+        category: string;
+        commentCount: number;
+    }[];
+    commentsByUser: {
+        userId: number;
+        userName: string;
+        commentCount: number;
+    }[];
 };
 
 async function graphQLRequest<T>(
@@ -194,21 +214,36 @@ export async function deleteCommentRequest(commentId: number): Promise<void> {
     await graphQLRequest(mutation, { commentId });
 }
 
-export async function fetchCommentStats(): Promise<
-    { eventId: number; eventTitle: string; commentCount: number }[]
-> {
+export async function fetchCommentStats(): Promise<CommentStatsResponse> {
     const query = `
         query GetCommentStats {
             commentStats {
-                eventId
-                eventTitle
-                commentCount
+                totalComments
+
+                commentsByEvent {
+                    eventId
+                    eventTitle
+                    commentCount
+                }
+
+                mostCommentedEvents {
+                    eventId
+                    eventTitle
+                    category
+                    commentCount
+                }
+
+                commentsByUser {
+                    userId
+                    userName
+                    commentCount
+                }
             }
         }
     `;
 
     const data = await graphQLRequest<{
-        commentStats: { eventId: number; eventTitle: string; commentCount: number }[];
+        commentStats: CommentStatsResponse;
     }>(query);
 
     return data.commentStats;

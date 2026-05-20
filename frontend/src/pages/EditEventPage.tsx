@@ -15,9 +15,33 @@ import {
 } from "lucide-react";
 import type { EventItem } from "../types/event";
 import { fetchEventById } from "../services/eventsApi";
+import { useAuth } from "../context/AuthContext";
 
 function EditEventPage() {
     const navigate = useNavigate();
+    const { hasPermission } = useAuth();
+
+    if (!hasPermission("events:update")) {
+        return (
+            <div className="app-shell">
+                <Navbar />
+                <main className="edit-event-page">
+                    <section className="edit-event-panel">
+                        <h1>Access denied</h1>
+                        <p>You do not have permission to edit events.</p>
+                        <button
+                            type="button"
+                            className="primary-button"
+                            onClick={() => navigate("/events-table")}
+                        >
+                            Back to events
+                        </button>
+                    </section>
+                </main>
+            </div>
+        );
+    }
+    
     const { id } = useParams();
     const { newEvents, updateEvent, isOnline } = useEvents();
 

@@ -1,5 +1,5 @@
-//const API_MODE: string = "rest";
-const API_MODE: string = "graphql";
+const API_MODE: string = "rest";
+//const API_MODE: string = "graphql";
 
 import * as restApi from "./eventsApi.rest";
 import * as graphqlApi from "./eventsApi.graphql";
@@ -26,3 +26,18 @@ export const stopGeneratorRequest = api.stopGeneratorRequest;
 export const fetchGeneratorStatus = api.fetchGeneratorStatus;
 
 export { API_MODE };
+
+export type {
+    EventsPageResponse,
+    CommentStatsResponse,
+} from "./eventsApi.rest";
+
+export type CategoryStat = {
+    category: string;
+    count: number;
+};
+
+export type PriceStat = {
+    name: string;
+    value: number;
+};

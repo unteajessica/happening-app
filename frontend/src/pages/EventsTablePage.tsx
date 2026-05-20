@@ -8,6 +8,7 @@ import { savePreferredView, saveLastPage, getLastPage } from "../utils/cookies";
 import SectionPageLayout from "../components/SectionPageLayout";
 import InsightCard from "../components/InsightCard";
 import { API_MODE } from "../services/eventsApi";
+import RequirePermission from "../components/RequirePermission";
 
 function EventsTablePage() {
     const [currentPage, setCurrentPage] = useState(getLastPage());
@@ -79,14 +80,16 @@ function EventsTablePage() {
                             Switch to Cards View
                         </button>
 
-                        <button
-                            className="add-event-button"
-                            onClick={() => navigate("/add-event")}
-                            aria-label="Add event"
-                            type="button"
-                        >
-                            +
-                        </button>
+                        <RequirePermission permission="events:create">
+                            <button
+                                className="add-event-button"
+                                onClick={() => navigate("/add-event")}
+                                aria-label="Add event"
+                                type="button"
+                            >
+                                +
+                            </button>
+                        </RequirePermission>
                     </>
                 }
                 insights={
@@ -150,6 +153,7 @@ function EventsTablePage() {
                                                 View
                                             </button>
 
+                                            <RequirePermission permission="events:update">
                                             <button
                                                 type="button"
                                                 className="action-button table-edit-button mobile-hide-action"
@@ -157,7 +161,9 @@ function EventsTablePage() {
                                             >
                                                 Edit
                                             </button>
+                                            </RequirePermission>
 
+                                            <RequirePermission permission="events:delete">
                                             <button
                                                 type="button"
                                                 className="action-button delete-button mobile-hide-action"
@@ -165,6 +171,7 @@ function EventsTablePage() {
                                             >
                                                 Delete
                                             </button>
+                                            </RequirePermission>
 
                                             <button
                                                 className="heart-button"

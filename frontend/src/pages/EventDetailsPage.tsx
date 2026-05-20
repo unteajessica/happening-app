@@ -22,6 +22,8 @@ import {
     createCommentRequest,
     deleteCommentRequest,
 } from "../services/eventsApi";
+import RequirePermission from "../components/RequirePermission";
+import { useAuth } from "../context/AuthContext";
 
 function EventDetailsPage() {
     const navigate = useNavigate();
@@ -40,6 +42,8 @@ function EventDetailsPage() {
     const [serverError, setServerError] = useState("");
 
     const eventId = Number(id);
+
+    const { hasPermission } = useAuth();
 
     useEffect(() => {
         if (id) saveLastViewedEvent(Number(id));
@@ -373,13 +377,15 @@ function EventDetailsPage() {
                                                     </p>
                                                 </div>
 
-                                                <button
-                                                    type="button"
-                                                    className="event-comment-delete"
-                                                    onClick={() => handleDeleteComment(comment.id)}
-                                                >
-                                                    Delete
-                                                </button>
+                                                {hasPermission("comments:delete") && (
+                                                    <button
+                                                        type="button"
+                                                        className="event-comment-delete"
+                                                        onClick={() => handleDeleteComment(comment.id)}
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                )}
                                             </div>
 
                                             <p className="event-comment-message">
@@ -414,6 +420,7 @@ function EventDetailsPage() {
                                     Back
                                 </button>
 
+                                <RequirePermission permission="events:update">
                                 <button
                                     type="button"
                                     className="event-action-button event-action-edit"
@@ -422,7 +429,9 @@ function EventDetailsPage() {
                                     <Pencil size={16} />
                                     Edit event
                                 </button>
+                                </RequirePermission>
 
+                                <RequirePermission permission="events:delete">
                                 <button
                                     type="button"
                                     className="event-action-button event-action-delete"
@@ -434,6 +443,7 @@ function EventDetailsPage() {
                                     <Trash2 size={16} />
                                     Delete event
                                 </button>
+                                </RequirePermission>
                             </div>
                         </div>
 

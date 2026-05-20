@@ -5,13 +5,16 @@ import './index.css'
 import { BrowserRouter } from 'react-router-dom'
 import './styles/globals.css'
 import { EventsProvider } from './context/EventsContext'
+import { AuthProvider } from "./context/AuthContext";
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <BrowserRouter>
-      <EventsProvider>
-        <App />
-      </EventsProvider>
+      <AuthProvider>
+        <EventsProvider>
+          <App />
+        </EventsProvider>
+      </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>,
 )

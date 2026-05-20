@@ -1,7 +1,7 @@
 import type { EventItem } from "../types/event";
 import type { CommentItem, CommentInput } from "../types/comment";
 
-const BASE_URL = "http://localhost:3000";
+const BASE_URL =  import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 export type EventsPageResponse = {
     items: EventItem[];
@@ -10,6 +10,44 @@ export type EventsPageResponse = {
     total: number;
     totalPages: number;
 };
+
+export type CommentStatsResponse = {
+    totalComments: number;
+    commentsByEvent: {
+        eventId: number;
+        eventTitle: string;
+        commentCount: number;
+    }[];
+    mostCommentedEvents: {
+        eventId: number;
+        eventTitle: string;
+        category: string;
+        commentCount: number;
+    }[];
+    commentsByUser: {
+        userId: number;
+        userName: string;
+        commentCount: number;
+    }[];
+};
+
+function getAuthToken() {
+    return localStorage.getItem("happening_auth_token");
+}
+
+function getAuthHeaders(): HeadersInit {
+    const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+    };
+
+    const token = getAuthToken();
+
+    if (token) {
+        headers.Authorization = `Bearer ${token}`;
+    }
+
+    return headers;
+}
 
 export async function fetchEventsPage(
     page: number,
@@ -46,9 +84,7 @@ export async function createEventRequest(
 ): Promise<EventItem> {
     const response = await fetch(`${BASE_URL}/events`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify(event),
     });
 
@@ -67,9 +103,7 @@ export async function updateEventRequest(
 ): Promise<EventItem> {
     const response = await fetch(`${BASE_URL}/events/${id}`, {
         method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify(event),
     });
 
@@ -85,6 +119,7 @@ export async function updateEventRequest(
 export async function deleteEventRequest(id: number): Promise<void> {
     const response = await fetch(`${BASE_URL}/events/${id}`, {
         method: "DELETE",
+        headers: getAuthHeaders(),
     });
 
     const data = await response.json().catch(() => null);
@@ -110,9 +145,7 @@ export async function createCommentRequest(
 ): Promise<CommentItem> {
     const response = await fetch(`${BASE_URL}/comments`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify(comment),
     });
 
@@ -128,6 +161,7 @@ export async function createCommentRequest(
 export async function deleteCommentRequest(commentId: number): Promise<void> {
     const response = await fetch(`${BASE_URL}/comments/${commentId}`, {
         method: "DELETE",
+        headers: getAuthHeaders(),
     });
 
     const data = await response.json().catch(() => null);
@@ -137,10 +171,8 @@ export async function deleteCommentRequest(commentId: number): Promise<void> {
     }
 }
 
-export async function fetchCommentStats(): Promise<
-    { eventId: number; eventTitle: string; commentCount: number }[]
-> {
-    const response = await fetch(`${BASE_URL}/comments/stats`);
+export async function fetchCommentStats(): Promise<CommentStatsResponse> {
+    const response = await fetch(`${BASE_URL}/stats/comments`);
     const data = await response.json().catch(() => null);
 
     if (!response.ok) {

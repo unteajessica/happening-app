@@ -13,9 +13,32 @@ import {
     Ticket,
     Image as ImageIcon,
 } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 function AddEventPage() {
     const navigate = useNavigate();
+    const { hasPermission } = useAuth();
+
+    if (!hasPermission("events:create")) {
+        return (
+            <div className="app-shell">
+                <Navbar />
+                <main className="add-event-page">
+                    <section className="add-event-panel">
+                        <h1>Access denied</h1>
+                        <p>You do not have permission to create events.</p>
+                        <button
+                            type="button"
+                            className="primary-button"
+                            onClick={() => navigate("/events-table")}
+                        >
+                            Back to events
+                        </button>
+                    </section>
+                </main>
+            </div>
+        );
+    }
     const { addEvent } = useEvents();
 
     const [title, setTitle] = useState("");

@@ -1,9 +1,19 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Logo from "./Logo";
-import { User, ArrowUpRight } from "lucide-react";
+import { User, ArrowUpRight, LogOut } from "lucide-react";
 import "./styles/navbar.css";
+import { useAuth } from "../context/AuthContext";
+import RequirePermission from "./RequirePermission";
 
 function Navbar() {
+    const { currentUser, logout } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate("/login");
+    };
+
     return (
         <header className="navbar">
             <div className="navbar-inner">
@@ -49,7 +59,53 @@ function Navbar() {
                         </span>
                         <span className="text-link">Favorites</span>
                     </NavLink>
+
+                    <NavLink
+                        to="/chat"
+                        className={({ isActive }) =>
+                            `navbar-link ${isActive ? "active-link" : ""}`
+                        }
+                    >
+                        <span className="navbar-link-icon">
+                            <ArrowUpRight size={16} strokeWidth={2} />
+                        </span>
+                        <span className="text-link">Chat</span>
+                    </NavLink>
+
+                    <RequirePermission permission="suspicious-users:read">
+                        <NavLink
+                            to="/observation-list"
+                            className={({ isActive }) =>
+                                `navbar-link ${isActive ? "active-link" : ""}`
+                            }
+                        >
+                            <span className="navbar-link-icon">
+                                <ArrowUpRight size={16} strokeWidth={2} />
+                            </span>
+                            <span className="text-link">Observation</span>
+                        </NavLink>
+                    </RequirePermission>
                 </nav>
+                
+                {currentUser && (
+                    <div className="navbar-user-box">
+                        <div className="navbar-user-info">
+                            <span className="navbar-user-name">{currentUser.name}</span>
+                            <span className="navbar-user-role">
+                                {currentUser.roles.join(", ")}
+                            </span>
+                        </div>
+
+                        <button
+                            type="button"
+                            className="navbar-logout-button"
+                            onClick={handleLogout}
+                            title="Logout"
+                        >
+                            <LogOut size={18} />
+                        </button>
+                    </div>
+                )}
 
                 <div className="navbar-right">
                     <NavLink to="/profile" className="navbar-profile">

@@ -1,6 +1,7 @@
 import "./styles/event-card.css";
 import type { EventItem } from "../types/event";
 import { useEvents } from "../context/EventsContext";
+import RequirePermission from "../components/RequirePermission";
 
 interface EventCardProps {
     event: EventItem;
@@ -42,6 +43,7 @@ function EventCard({ event, onView, onEdit, onDelete }: EventCardProps) {
                         </button>
 
                         {onEdit && (
+                            <RequirePermission permission="events:update">
                             <button
                                 type="button"
                                 className="event-card-button event-card-edit-button"
@@ -49,9 +51,11 @@ function EventCard({ event, onView, onEdit, onDelete }: EventCardProps) {
                             >
                                 Edit
                             </button>
+                            </RequirePermission>
                         )}
 
                         {onDelete && (
+                            <RequirePermission permission="events:delete">
                             <button
                                 type="button"
                                 className="event-card-button event-card-delete-button"
@@ -59,6 +63,7 @@ function EventCard({ event, onView, onEdit, onDelete }: EventCardProps) {
                             >
                                 Delete
                             </button>
+                            </RequirePermission>
                         )}
                     </div>
 

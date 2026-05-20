@@ -11,4 +11,5 @@ module.exports = {
         "!src/server.ts"
     ],
     coverageDirectory: "coverage",
+    setupFilesAfterEnv: ["<rootDir>/tests/setupDatabase.ts"]
 };

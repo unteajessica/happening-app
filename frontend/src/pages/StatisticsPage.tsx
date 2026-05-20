@@ -22,13 +22,16 @@ import InsightCard from "../components/InsightCard";
 import {
     fetchCategoryStats,
     fetchPriceStats,
+    fetchCommentStats,
     type CategoryStat,
     type PriceStat,
+    type CommentStatsResponse,
 } from "../services/eventsApi";
 
 function StatisticsPage() {
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
     const [categoryStats, setCategoryStats] = useState<CategoryStat[]>([]);
+    const [commentStats, setCommentStats] = useState<CommentStatsResponse | null>(null);
     const [priceStats, setPriceStats] = useState<PriceStat[]>([]);
     const [statsError, setStatsError] = useState("");
 
@@ -49,13 +52,17 @@ function StatisticsPage() {
             try {
                 setStatsError("");
 
-                const [categories, pricing] = await Promise.all([
+                const [categories, pricing, comments] = await Promise.all([
                     fetchCategoryStats(),
                     fetchPriceStats(),
+                    fetchCommentStats(),
                 ]);
 
-                setCategoryStats(categories.sort((a: CategoryStat, b: CategoryStat) => b.count - a.count));
+                setCategoryStats(
+                    categories.sort((a: CategoryStat, b: CategoryStat) => b.count - a.count)
+                );
                 setPriceStats(pricing);
+                setCommentStats(comments);
             } catch (error) {
                 if (error instanceof Error) {
                     setStatsError(error.message);
@@ -77,6 +84,16 @@ function StatisticsPage() {
         priceStats.find((item) => item.name === "Paid")?.value ?? 0;
 
     const topCategory = categoryStats.length > 0 ? categoryStats[0] : null;
+
+    const totalComments = commentStats?.totalComments ?? 0;
+
+    const mostCommentedEvent =
+        commentStats?.mostCommentedEvents && commentStats.mostCommentedEvents.length > 0
+            ? commentStats.mostCommentedEvents[0]
+            : null;
+
+    const topCommentedEvents =
+        commentStats?.mostCommentedEvents.slice(0, 5) ?? [];
 
     return (
         <div className="app-shell">
@@ -102,9 +119,14 @@ function StatisticsPage() {
                         <InsightCard label="Events" value={events.length} />
                         <InsightCard label="Free" value={freeCount} />
                         <InsightCard label="Paid" value={paidCount} />
+                        <InsightCard label="Comments" value={totalComments} />
                         <InsightCard
                             label="Top category"
                             value={topCategory ? topCategory.category : "—"}
+                        />
+                        <InsightCard
+                            label="Most discussed"
+                            value={mostCommentedEvent ? mostCommentedEvent.eventTitle : "—"}
                         />
                     </>
                 }
@@ -179,6 +201,34 @@ function StatisticsPage() {
                                         </Pie>
                                         <Legend />
                                     </PieChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </article>
+
+                        <article className="statistics-card">
+                            <div className="statistics-card-text">
+                                <h3>Most Commented Events</h3>
+                                <p>
+                                    A ranking of the events with the most comments. This helps identify
+                                    which events generated the most discussion from users.
+                                </p>
+                            </div>
+
+                            <div className="statistics-chart-wrap statistics-chart-large">
+                                <ResponsiveContainer width="100%" height={340}>
+                                    <BarChart data={topCommentedEvents}>
+                                        <CartesianGrid strokeDasharray="3 3" />
+                                        <XAxis
+                                            dataKey="eventTitle"
+                                            interval={0}
+                                            angle={-35}
+                                            textAnchor="end"
+                                            height={90}
+                                        />
+                                        <YAxis allowDecimals={false} />
+                                        <Tooltip />
+                                        <Bar dataKey="commentCount" fill="#a684eb" />
+                                    </BarChart>
                                 </ResponsiveContainer>
                             </div>
                         </article>

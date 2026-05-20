@@ -161,3 +161,12 @@
         transform: translateY(0);
     }
 }
+
+.register-error {
+    background: #fff0f0;
+    color: #c0392b;
+    border-radius: 14px;
+    padding: 0.8rem 1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}

@@ -10,6 +10,7 @@ import SectionPageLayout from "../components/SectionPageLayout";
 import InsightCard from "../components/InsightCard";
 import { fetchEventsPage } from "../services/eventsApi";
 import { EVENTS_CARDS_MODE } from "../config/eventsDisplayMode";
+import RequirePermission from "../components/RequirePermission";
 
 function EventsCardsPage() {
     const navigate = useNavigate();
@@ -247,6 +248,7 @@ function EventsCardsPage() {
                             Switch to Table View
                         </button>
 
+                        <RequirePermission permission="events:create">
                         <button
                             className="add-event-button"
                             onClick={() => navigate("/add-event")}
@@ -255,6 +257,7 @@ function EventsCardsPage() {
                         >
                             +
                         </button>
+                        </RequirePermission>
                     </>
                 }
                 insights={
