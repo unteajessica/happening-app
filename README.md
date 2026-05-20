@@ -1,133 +1,379 @@
 # Happening App
 
-Happening App is a fullstack event management and discovery platform built to showcase both frontend and backend development. It allows users to browse events, view detailed information, manage favorites, create and edit events, explore statistics, interact with event comments, and visualize live event updates.
+Happening App is a fullstack event discovery and management platform built with React, TypeScript, Node.js, Express, PostgreSQL, Prisma, MongoDB, Socket.IO, GraphQL, JWT authentication, HTTPS, and role-based authorization.
 
-The project was developed progressively, starting with a frontend-focused implementation and then evolving into a fullstack application with REST, GraphQL, offline support, live data generation, websockets, and multiple UI interaction modes.
-
----
-
-## Overview
-
-The application supports:
-
-- browsing events in both **table view** and **cards view**
-- **event details** pages with metadata and comment sections
-- **add / edit / delete** event functionality
-- **favorites** management
-- **statistics** and **split-view analytics**
-- **offline CRUD support** with synchronization when connection is restored
-- **live server-side fake event generation**
-- **real-time updates** through websockets
-- both **REST API** and **GraphQL API** implementations
-- both **classic pagination** and **infinite scroll** modes
-- a **1-to-many fullstack relationship** between events and comments
+The application allows users to browse events, view event details, add comments, manage favorites, use a real-time chat, view statistics, and interact with admin-only monitoring tools. It was developed progressively to demonstrate frontend, backend, database, authentication, authorization, testing, real-time communication, offline support, and secure client-server communication.
 
 ---
 
 ## Main Features
 
-### Event management
+### Event discovery and management
+
 Users can:
-- create new events
-- update existing events
-- delete events
-- browse event collections
-- view event details
 
-### Favorites
-Users can mark events as favorites and later revisit them in the dedicated Favorites page.
+* browse events in table view
+* browse events in cards view
+* open event details
+* search/filter events
+* view event metadata
+* view event comments
+* mark events as favorites
 
-### Pick Your Night
-Users can compare favorite events in a face-off style flow until one final winner remains.
+Admins can also:
 
-### Statistics
-The application computes and visualizes:
-- events by category
-- free vs paid events
-- comment counts per event
+* create events
+* update events
+* delete events
 
-### Split View
-A dedicated live-analysis page shows:
-- event list on one side
-- charts and statistics on the other side
-- real-time updates when the backend generator creates fake events
+---
+
+### Authentication and authorization
+
+The app implements fullstack authentication and authorization.
+
+Features:
+
+* secure login
+* secure register
+* password hashing with bcrypt
+* JWT token generation on login/register
+* JWT token verification on protected backend routes
+* role-based permissions
+* frontend permission checks
+* backend permission middleware
+* automatic logout after inactivity
+
+The frontend stores:
+
+```text
+happening_current_user
+happening_auth_token
+```
+
+The backend expects protected requests to send:
+
+```text
+Authorization: Bearer <token>
+```
+
+---
+
+### Roles and permissions
+
+The app supports two main roles:
+
+```text
+ADMIN
+USER
+```
+
+Admin users can:
+
+* create events
+* edit events
+* delete events
+* delete comments
+* view action logs
+* view suspicious users
+* review/dismiss suspicious users
+* delete chat messages
+
+Regular users can:
+
+* view events
+* view event details
+* add comments
+* use favorites
+* play Pick Your Night
+* use chat
+* view statistics
+
+Regular users cannot:
+
+* create/edit/delete events
+* delete comments
+* view logs
+* view the observation list
+* delete chat
+
+---
 
 ### Comments system
-Each event can have multiple comments.
 
-This introduces a **1-to-many relationship** in the domain model:
+Each event can have many comments.
 
-- one event
-- many comments
+This creates a fullstack one-to-many relationship:
+
+```text
+Event 1 --- many Comments
+```
 
 Users can:
-- view comments for an event
-- create comments
-- delete comments
 
-### Offline mode
-When the network is down or the backend becomes unreachable, the app:
-- falls back to local cached data
-- allows local create / update / delete operations
-- queues unsynced operations
-- synchronizes them once the connection is restored
+* view comments
+* add comments
 
-### Dual API support
+Admins can:
+
+* delete comments
+
+---
+
+### Favorites
+
+Users can mark events as favorites and view them on the Favorites page.
+
+---
+
+### Pick Your Night
+
+The Pick Your Night page lets users compare favorite events in a face-off style flow until one final winner remains.
+
+---
+
+### Statistics
+
+The Statistics page shows backend-calculated analytics such as:
+
+* events per category
+* free vs paid events
+* comment statistics
+* most commented events
+* comments by user
+
+Statistics are calculated on the backend using Prisma queries.
+
+---
+
+### Split View
+
+The Split View page shows:
+
+* event list
+* visual statistics
+* real-time updates
+
+It is useful for demonstrating live data behavior together with charts.
+
+---
+
+### Real-time chat
+
+The app includes a real-time chat system.
+
+Chat features:
+
+* Socket.IO real-time communication
+* MongoDB persistence
+* old messages loaded from MongoDB
+* live messages broadcast to all connected clients
+* JWT-authenticated socket connection
+* admin-only Delete Chat button
+* chat clearing broadcast live to connected users
+
+Chat messages are stored in MongoDB.
+
+---
+
+### NoSQL database
+
+MongoDB Atlas is used as the NoSQL database for chat messages.
+
+The chat messages collection stores:
+
+```text
+roomId
+userId
+userName
+message
+createdAt
+```
+
+---
+
+### Action logging
+
+The app stores important user actions in PostgreSQL.
+
+Logged actions include:
+
+```text
+LOGIN_SUCCESS
+LOGIN_FAILED
+REGISTER_SUCCESS
+PERMISSION_DENIED
+EVENT_CREATED
+EVENT_UPDATED
+EVENT_DELETED
+COMMENT_CREATED
+COMMENT_DELETED
+CHAT_MESSAGE_SENT
+CHAT_CLEARED
+```
+
+Logs are stored in:
+
+```text
+action_logs
+```
+
+---
+
+### Suspicious user detection
+
+The backend detects suspicious behavior based on user action logs.
+
+Detection rules:
+
+```text
+3 permission denied attempts in 10 minutes
+5 delete actions in 10 minutes
+10 chat messages in 1 minute
+```
+
+When suspicious behavior is detected, the user is added to:
+
+```text
+suspicious_users
+```
+
+Admins can view suspicious users in the Observation List page and mark them as:
+
+```text
+ACTIVE
+REVIEWED
+DISMISSED
+```
+
+---
+
+### Observation List
+
+The admin-only Observation List page displays:
+
+* suspicious users
+* reason for detection
+* suspicious score
+* status
+* recent action logs
+* review button
+* dismiss button
+
+Only users with the correct permissions can access this page.
+
+---
+
+### HTTPS and two-machine network setup
+
+The app supports HTTPS local development using self-signed certificates.
+
+The project can be demonstrated with:
+
+```text
+Laptop/server machine:
+- PostgreSQL
+- backend
+- frontend dev server
+
+Second client machine:
+- phone / another laptop
+- browser opens the frontend using the server machine LAN IP
+```
+
+Example:
+
+```text
+https://172.20.10.3:5173
+```
+
+The frontend communicates with the backend over HTTPS:
+
+```text
+https://172.20.10.3:3000
+```
+
+This satisfies the requirement that the server and client run on different machines on the same LAN or hotspot.
+
+---
+
+### Offline support
+
+The frontend includes offline behavior for event data.
+
+When the backend is unavailable:
+
+* cached data is used
+* local changes can be queued
+* queued operations synchronize when connectivity is restored
+
+---
+
+### REST and GraphQL support
+
 The project supports both:
-- REST
-- GraphQL
 
-The frontend can be switched between the two to demonstrate both implementations.
+* REST API
+* GraphQL API
 
-### Dual browsing modes
-The cards page supports both:
-- classic pagination
-- infinite scroll
-
-This allows side-by-side comparison of different frontend loading strategies.
+The frontend can be switched between API modes through the service abstraction layer.
 
 ---
 
 ## Technology Stack
 
 ### Frontend
-- **React**
-- **TypeScript**
-- **Vite**
-- **React Router**
-- **Lucide React**
-- **Recharts**
-- **Socket.IO Client**
-- CSS modules / page-level CSS styling
+
+* React
+* TypeScript
+* Vite
+* React Router
+* Socket.IO Client
+* Recharts
+* Lucide React
+* CSS page-level styling
+* LocalStorage for auth/session/offline queue
 
 ### Backend
-- **Node.js**
-- **Express**
-- **TypeScript**
-- **Socket.IO**
-- **Apollo Server**
-- **GraphQL**
-- **Faker**
 
-### Testing / Tooling
-- **Jest**
-- **Supertest**
-- **Nodemon**
-- **TSX**
-- **Thunder Client** for API testing
+* Node.js
+* Express
+* TypeScript
+* Prisma ORM
+* PostgreSQL
+* MongoDB Atlas
+* Mongoose
+* Socket.IO
+* GraphQL / Apollo Server
+* JWT / jsonwebtoken
+* bcrypt
+* Faker
+* HTTPS self-signed certificates
+
+### Testing and tooling
+
+* Jest
+* Supertest
+* ts-jest
+* Nodemon
+* TSX
+* Prisma Studio
+* Thunder Client / Postman
 
 ---
 
-## Architecture and Project Organization
-
-The repository is split into two main parts:
+## Project Structure
 
 ```text
-backend/
-frontend/
-````
+happening-app/
+  backend/
+  frontend/
+  certs/
+```
 
-### Frontend structure
+---
+
+## Frontend Structure
 
 ```text
 frontend/src/
@@ -142,204 +388,309 @@ frontend/src/
   utils/
 ```
 
-#### Important frontend folders
+### Important frontend folders
 
-* `components/`
-  Reusable UI building blocks such as cards, layout sections, navigation, and insight cards.
+#### `components/`
 
-* `pages/`
-  Route-level pages like:
+Reusable UI components such as:
 
-  * `EventsTablePage`
-  * `EventsCardsPage`
-  * `EventDetailsPage`
-  * `AddEventPage`
-  * `EditEventPage`
-  * `FavoritesPage`
-  * `StatisticsPage`
-  * `SplitViewPage`
-  * `PickYourNightPage`
+* Navbar
+* Logo
+* Event cards
+* Insight cards
+* layout components
+* permission wrapper components
 
-* `context/`
-  Contains `EventsContext`, which coordinates:
+#### `pages/`
 
-  * current event state
-  * online/offline mode
-  * synchronization logic
-  * favorites logic
-  * CRUD orchestration
+Route-level pages such as:
 
-* `services/`
-  API abstraction layer. Includes:
+* LoginPage
+* RegisterPage
+* EventsTablePage
+* EventsCardsPage
+* EventDetailsPage
+* AddEventPage
+* EditEventPage
+* FavoritesPage
+* StatisticsPage
+* SplitViewPage
+* PickYourNightPage
+* ChatPage
+* ObservationListPage
 
-  * REST implementation
-  * GraphQL implementation
-  * a switch file to choose the active API mode
+#### `context/`
 
-* `types/`
-  Shared TypeScript models such as:
+Contains global frontend state providers:
 
-  * `EventItem`
-  * `CommentItem`
+* `AuthContext`
+* `EventsContext`
 
-* `utils/`
-  Utility modules for:
+`AuthContext` handles:
 
-  * cookies
-  * offline queue
-  * events cache
+* current logged-in user
+* JWT token storage
+* login
+* register
+* logout
+* permission checks
+* role checks
+* inactivity logout
 
-* `config/`
-  Runtime switching configuration, for example:
+`EventsContext` handles:
 
-  * REST vs GraphQL
-  * pagination vs infinite scroll
+* event state
+* favorites
+* online/offline behavior
+* CRUD orchestration
+* offline queue sync
 
-### Backend structure
+#### `services/`
+
+Contains API abstraction files, including:
+
+* auth API
+* REST events API
+* GraphQL events API
+* chat API
+* logs API
+
+#### `utils/`
+
+Contains helper logic for:
+
+* cookies
+* cached events
+* offline queue
+* local storage utilities
+
+---
+
+## Backend Structure
 
 ```text
 backend/src/
   controllers/
-  data/
+  db/
   graphql/
+  middleware/
+  models/
   routes/
   services/
+  utils/
   validators/
   app.ts
   server.ts
   socket.ts
 ```
 
-#### Important backend folders
+### Important backend folders
 
-* `controllers/`
-  Business logic entry points for REST routes:
+#### `controllers/`
 
-  * events
-  * comments
-  * stats
-  * generator
+REST controller logic for:
 
-* `data/`
-  In-memory data stores and domain types:
+* auth
+* events
+* comments
+* categories
+* stats
+* generator
+* chat
+* logs
 
-  * events
-  * comments
+#### `db/`
 
-* `graphql/`
-  GraphQL schema, resolvers, and setup.
+Prisma client setup.
 
-* `routes/`
-  REST route declarations for:
+#### `graphql/`
 
-  * `/events`
-  * `/comments`
-  * `/stats`
-  * `/generator`
+GraphQL schema, resolvers, and registration.
 
-* `services/`
-  Additional backend services such as the fake-event generator.
+#### `middleware/`
 
-* `validators/`
-  Input validation for events and comments.
+Authentication and authorization middleware:
 
-* `socket.ts`
-  Socket.IO initialization and websocket communication setup.
+* JWT token authentication
+* permission checking
 
-* `app.ts`
-  Express application setup.
+#### `models/`
 
-* `server.ts`
-  HTTP server startup, Socket.IO setup, and GraphQL registration.
+MongoDB/Mongoose models, including the chat message model.
 
----
+#### `routes/`
 
-## API Modes
+Express route definitions for:
 
-The frontend can run against either implementation:
+```text
+/auth
+/events
+/comments
+/categories
+/stats
+/generator
+/chat
+/logs
+/graphql
+```
 
-* **REST**
-* **GraphQL**
+#### `services/`
 
-This is controlled from the frontend service switch configuration. This allows the same UI to be demonstrated using two backend communication styles.
+Reusable backend services:
 
----
+* logging service
+* suspicious behavior detection service
+* generator service
 
-## Browsing Modes
+#### `utils/`
 
-The cards page can run in two loading styles:
+Utility modules such as JWT token creation and verification.
 
-* **pagination**
-* **infinite scroll**
+#### `validators/`
 
-This is useful for demonstrating:
+Validation logic for:
 
-* traditional pagination UX
-* modern incremental-loading UX
-
----
-
-## Offline and Synchronization Model
-
-The application includes offline support for CRUD operations.
-
-### Behavior
-
-When the backend is unavailable or the connection is lost:
-
-* cached event data is used
-* create / update / delete operations are applied locally
-* operations are saved in a local offline queue
-
-When connectivity is restored:
-
-* queued operations are replayed to the backend
-* data is refreshed from the server
-
-This makes the app resilient and demonstrates progressive enhancement of the frontend state layer.
+* event input
+* comment input
 
 ---
 
-## Real-Time Features
+## Database Design
 
-The backend includes a fake data generator that can be started and stopped.
+### PostgreSQL
 
-### Generator capabilities
+PostgreSQL stores the relational application data.
 
-* server creates valid fake events at intervals
-* generated events are stored in backend memory
-* new events are broadcast to connected clients via Socket.IO
+Main tables:
 
-### Frontend behavior
+```text
+users
+roles
+permissions
+user_roles
+role_permissions
+categories
+events
+comments
+action_logs
+suspicious_users
+```
 
-The Split View page listens for websocket events and updates:
+### MongoDB
 
-* the event list
-* event counts
-* statistics
-* charts
+MongoDB stores real-time chat messages.
 
-in real time.
+Main collection:
+
+```text
+chat_messages
+```
 
 ---
 
-## 1-to-Many Relationship
+## Prisma
 
-The domain model includes:
+The project uses Prisma ORM for PostgreSQL.
 
-* **Event**
-* **Comment**
+Important files:
 
-One event can have many comments.
+```text
+backend/prisma/schema.prisma
+backend/prisma/seed.ts
+backend/prisma/migrations/
+```
 
-This relationship is implemented fullstack:
+Useful commands:
 
-* backend data model
-* REST endpoints
-* GraphQL schema and resolvers
-* frontend details page
-* comment CRUD
-* comment-based statistics
+```bash
+npx prisma migrate dev
+npx prisma generate
+npx prisma db seed
+npx prisma studio
+```
+
+---
+
+## Environment Variables
+
+### Backend `.env`
+
+Create:
+
+```text
+backend/.env
+```
+
+Example:
+
+```env
+DATABASE_URL="postgresql://postgres:yourpassword@localhost:5432/happening_db?schema=public"
+
+MONGO_URL="mongodb+srv://your_mongodb_user:your_password@your_cluster.mongodb.net/happening_chat?appName=happening-chat"
+
+JWT_SECRET="happening_super_secret_dev_key_2026"
+```
+
+### Frontend `.env`
+
+Create:
+
+```text
+frontend/.env
+```
+
+For local laptop-only testing:
+
+```env
+VITE_API_URL=https://localhost:3000
+```
+
+For LAN/hotspot testing with another device:
+
+```env
+VITE_API_URL=https://YOUR_LAPTOP_IP:3000
+```
+
+Example:
+
+```env
+VITE_API_URL=https://172.20.10.3:3000
+```
+
+Every time you change Wi-Fi or hotspot, the laptop IP may change, so update `VITE_API_URL` and restart the frontend.
+
+---
+
+## HTTPS Certificates
+
+The app uses self-signed certificates for local HTTPS development.
+
+Certificates are stored in:
+
+```text
+certs/
+  happening-key.pem
+  happening-cert.pem
+```
+
+Generate them from the project root using Git Bash:
+
+```bash
+mkdir -p certs
+
+MSYS_NO_PATHCONV=1 openssl req -x509 -newkey rsa:2048 -nodes -sha256 -days 365 \
+  -keyout certs/happening-key.pem \
+  -out certs/happening-cert.pem \
+  -subj "/CN=localhost"
+```
+
+If using Git Bash and path conversion causes problems, use:
+
+```bash
+-subj "//CN=localhost"
+```
+
+Do not upload real production certificates or private keys publicly.
 
 ---
 
@@ -348,8 +699,8 @@ This relationship is implemented fullstack:
 ### 1. Clone the repository
 
 ```bash
-git clone <your-repository-url>
-cd <your-repository-folder>
+git clone https://github.com/unteajessica/happening-app.git
+cd happening-app
 ```
 
 ### 2. Install backend dependencies
@@ -361,82 +712,231 @@ npm install
 
 ### 3. Install frontend dependencies
 
-Open a new terminal:
+Open a second terminal:
 
 ```bash
 cd frontend
 npm install
 ```
 
-### 4. Run the backend
+### 4. Create backend `.env`
 
-From the `backend` folder:
+Create:
+
+```text
+backend/.env
+```
+
+Add:
+
+```env
+DATABASE_URL="postgresql://postgres:yourpassword@localhost:5432/happening_db?schema=public"
+MONGO_URL="your_mongodb_connection_string"
+JWT_SECRET="happening_super_secret_dev_key_2026"
+```
+
+### 5. Create frontend `.env`
+
+Create:
+
+```text
+frontend/.env
+```
+
+For local testing:
+
+```env
+VITE_API_URL=https://localhost:3000
+```
+
+For network testing:
+
+```env
+VITE_API_URL=https://YOUR_LAPTOP_IP:3000
+```
+
+### 6. Generate Prisma client and run migrations
+
+From `backend/`:
+
+```bash
+npx prisma generate
+npx prisma migrate dev
+```
+
+### 7. Seed the database
+
+From `backend/`:
+
+```bash
+npx prisma db seed
+```
+
+This creates default data, including:
+
+```text
+admin@test.com / admin123
+user@test.com / user123
+```
+
+### 8. Generate HTTPS certificates
+
+From the project root:
+
+```bash
+mkdir -p certs
+
+MSYS_NO_PATHCONV=1 openssl req -x509 -newkey rsa:2048 -nodes -sha256 -days 365 \
+  -keyout certs/happening-key.pem \
+  -out certs/happening-cert.pem \
+  -subj "/CN=localhost"
+```
+
+### 9. Start the backend
+
+From `backend/`:
 
 ```bash
 npm run dev
 ```
 
-The backend runs on:
+Backend runs on:
 
 ```text
-http://localhost:3000
+https://localhost:3000
 ```
 
-### 5. Run the frontend
+or, on the network:
 
-From the `frontend` folder:
+```text
+https://YOUR_LAPTOP_IP:3000
+```
+
+### 10. Start the frontend
+
+From `frontend/`:
 
 ```bash
 npm run dev
 ```
 
-The frontend runs on:
+Frontend runs on:
 
 ```text
-http://localhost:5173
+https://localhost:5173
 ```
 
-### 6. Open the application
-
-Visit:
+or, on the network:
 
 ```text
-http://localhost:5173
+https://YOUR_LAPTOP_IP:5173
 ```
 
 ---
 
-## Switching Between REST and GraphQL
+## Browser Certificate Warning
 
-The frontend can be configured to use either REST or GraphQL.
+Because the project uses a self-signed HTTPS certificate, the browser may show:
 
-Depending on your setup, this is controlled through either:
+```text
+Your connection is not private
+```
 
-* `frontend/src/services/eventsApi.ts`
-* or `.env` config if you implemented environment-based switching
+For local development, click:
 
-### Example
+```text
+Advanced → Proceed
+```
 
-* `rest` mode -> frontend uses REST endpoints
-* `graphql` mode -> frontend uses `/graphql`
+Do this once for the backend:
 
-After changing the mode, restart the frontend if needed.
+```text
+https://localhost:3000/events?page=1&limit=6
+```
+
+or:
+
+```text
+https://YOUR_LAPTOP_IP:3000/events?page=1&limit=6
+```
+
+Then open the frontend:
+
+```text
+https://localhost:5173
+```
+
+or:
+
+```text
+https://YOUR_LAPTOP_IP:5173
+```
 
 ---
 
-## Switching Between Pagination and Infinite Scroll
+## Running on Two Devices
 
-The cards view supports both modes.
+To demonstrate client/server separation:
 
-This is controlled through:
+### Server machine
 
-* `frontend/src/config/eventsDisplayMode.ts`
-* or an environment variable if configured that way
+Run on the laptop:
 
-### Example
+```bash
+cd backend
+npm run dev
+```
 
-* `"pagination"` -> classic page-by-page navigation
-* `"infinite"` -> load more events while scrolling
+and:
+
+```bash
+cd frontend
+npm run dev
+```
+
+### Client machine
+
+Open the frontend from a second device, such as a phone:
+
+```text
+https://YOUR_LAPTOP_IP:5173
+```
+
+Example:
+
+```text
+https://172.20.10.3:5173
+```
+
+The frontend calls the backend at:
+
+```text
+https://YOUR_LAPTOP_IP:3000
+```
+
+This demonstrates that the client and server are running on different machines on the same LAN/hotspot.
+
+---
+
+## Default Accounts
+
+After seeding, these accounts are available:
+
+### Admin
+
+```text
+Email: admin@test.com
+Password: admin123
+Role: ADMIN
+```
+
+### Regular user
+
+```text
+Email: user@test.com
+Password: user123
+Role: USER
+```
 
 ---
 
@@ -450,13 +950,13 @@ From `backend/`:
 npm run dev
 ```
 
-Runs the backend in development mode.
+Starts the backend development server.
 
 ```bash
 npm run build
 ```
 
-Builds the backend TypeScript project.
+Builds the TypeScript backend.
 
 ```bash
 npm run start
@@ -476,6 +976,20 @@ npm run test:coverage
 
 Runs backend tests with coverage.
 
+```bash
+npx prisma db seed
+```
+
+Resets and seeds the database.
+
+```bash
+npx prisma studio
+```
+
+Opens Prisma Studio.
+
+---
+
 ### Frontend
 
 From `frontend/`:
@@ -484,13 +998,13 @@ From `frontend/`:
 npm run dev
 ```
 
-Runs the frontend in development mode.
+Starts the Vite frontend development server.
 
 ```bash
 npm run build
 ```
 
-Builds the frontend for production.
+Builds the frontend.
 
 ```bash
 npm run preview
@@ -500,57 +1014,275 @@ Previews the production build.
 
 ---
 
-## Testing the App
+## API Overview
 
-### REST testing
-
-You can test REST endpoints using:
-
-* browser
-* Thunder Client
-* Postman
-
-### GraphQL testing
-
-You can test GraphQL through:
+### Auth
 
 ```text
-http://localhost:3000/graphql
+POST /auth/login
+POST /auth/register
 ```
 
-### Offline mode testing
+### Events
 
-You can test offline support by:
+```text
+GET    /events
+GET    /events/:id
+POST   /events
+PUT    /events/:id
+DELETE /events/:id
+```
 
-* disconnecting the backend
-* or using browser offline tools
-* then performing CRUD operations
-* then restoring connectivity and checking sync behavior
+Protected event mutations require JWT and admin permissions.
 
-### Real-time generator testing
+### Comments
 
-Use the Split View page to:
+```text
+GET    /comments/event/:eventId
+POST   /comments
+DELETE /comments/:commentId
+```
 
-* start generator
-* watch live updates
-* stop generator
+Comment creation requires authentication.
+
+Comment deletion requires admin permission.
+
+### Statistics
+
+```text
+GET /stats/categories
+GET /stats/pricing
+GET /stats/comments
+```
+
+### Chat
+
+```text
+GET    /chat/messages
+DELETE /chat/messages
+```
+
+Chat messages are also sent live through Socket.IO.
+
+### Logs
+
+```text
+GET /logs
+GET /logs/suspicious-users
+PUT /logs/suspicious-users/:id/review
+PUT /logs/suspicious-users/:id/dismiss
+```
+
+Logs and suspicious users endpoints are admin-only.
+
+---
+
+## API Modes
+
+The frontend can use:
+
+```text
+REST
+GraphQL
+```
+
+The active mode is controlled in the frontend service switch file.
+
+Example:
+
+```ts
+const API_MODE = "rest";
+// const API_MODE = "graphql";
+```
+
+---
+
+## Real-Time Communication
+
+Socket.IO is used for:
+
+* live chat
+* chat clearing
+* generator/live updates
+
+Chat socket events include:
+
+```text
+chat:send-message
+chat:new-message
+chat:cleared
+chat:error
+```
+
+The Socket.IO connection is authenticated with the JWT token.
+
+---
+
+## Testing
+
+The backend uses Jest and Supertest.
+
+Run all tests:
+
+```bash
+cd backend
+npm test
+```
+
+Run coverage:
+
+```bash
+npm run test:coverage
+```
+
+The tests cover:
+
+* authentication
+* registration
+* JWT-protected routes
+* authorization failures
+* events
+* comments
+* categories
+* statistics
+* validators
+* generator
+* database behavior
+
+After running tests, reset the database for demo mode:
+
+```bash
+npx prisma db seed
+```
+
+---
+
+## Test Coverage
+
+Coverage output is printed in the terminal after:
+
+```bash
+npm run test:coverage
+```
+
+The HTML coverage report is generated in:
+
+```text
+backend/coverage/lcov-report/index.html
+```
+
+Open this file in the browser to inspect coverage by file.
+
+---
+
+## Demo Checklist
+
+Before presenting:
+
+```text
+1. Start PostgreSQL service.
+2. Confirm MongoDB Atlas connection works.
+3. Run backend with HTTPS.
+4. Run frontend with HTTPS.
+5. Open backend HTTPS URL and accept certificate warning.
+6. Open frontend HTTPS URL and accept certificate warning.
+7. Login as admin.
+8. Login as user on a second device.
+9. Test chat between both devices.
+10. Show admin-only permissions.
+11. Show Observation List.
+12. Run test coverage.
+13. Reset database with npx prisma db seed.
+```
+
+---
+
+## Presentation Notes
+
+### Where is authentication implemented?
+
+```text
+backend/src/controllers/auth.controller.ts
+backend/src/utils/authToken.ts
+backend/src/middleware/authenticateToken.ts
+frontend/src/context/AuthContext.tsx
+```
+
+### Where is authorization implemented?
+
+```text
+backend/src/middleware/requirePermission.ts
+frontend/src/components/RequirePermission.tsx
+```
+
+### Where is chat implemented?
+
+```text
+backend/src/socket.ts
+backend/src/controllers/chat.controller.ts
+backend/src/models/chatMessage.model.ts
+frontend/src/pages/ChatPage.tsx
+frontend/src/services/chatApi.ts
+```
+
+### Where are logs implemented?
+
+```text
+backend/src/services/log.service.ts
+backend/src/controllers/logs.controller.ts
+backend/prisma/schema.prisma
+```
+
+### Where is suspicious activity detected?
+
+```text
+backend/src/services/suspicious.service.ts
+frontend/src/pages/ObservationListPage.tsx
+```
+
+### Where are statistics calculated?
+
+```text
+backend/src/controllers/stats.controller.ts
+```
+
+### Where are events saved?
+
+```text
+backend/src/controllers/events.controller.ts
+```
 
 ---
 
 ## Notes
 
-* Data is currently stored **in memory**, so restarting the backend resets the dataset.
-* Offline data and queued operations may be stored in browser local storage.
-* The project is structured to demonstrate multiple architectural approaches in the same application:
-
-  * REST and GraphQL
-  * pagination and infinite scroll
-  * online and offline workflows
-  * static CRUD and live websocket updates
+* PostgreSQL must be running locally for the backend to work.
+* MongoDB Atlas is cloud-based and does not need to be started manually.
+* pgAdmin is optional and only used to inspect the database.
+* Prisma Studio can also be used to inspect database tables.
+* Because HTTPS uses a self-signed certificate, the browser warning is expected.
+* When changing Wi-Fi or hotspot, update `frontend/.env` with the new laptop IP.
+* After tests, run `npx prisma db seed` to restore demo data.
 
 ---
 
 ## Author
 
-Built as a fullstack academic project to demonstrate frontend, backend, API design, offline resilience, real-time communication, and data relationship modeling.
+Built as a fullstack academic project to demonstrate:
 
+* frontend development
+* backend development
+* REST and GraphQL APIs
+* PostgreSQL with Prisma
+* MongoDB NoSQL persistence
+* JWT authentication
+* role-based authorization
+* HTTPS network communication
+* two-device LAN/hotspot deployment
+* real-time communication
+* testing and coverage
+* suspicious activity detection
+* admin monitoring tools
+
+```
+```
