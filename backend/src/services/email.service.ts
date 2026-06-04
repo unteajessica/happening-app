@@ -1,4 +1,8 @@
+import dns from "dns";
 import nodemailer from "nodemailer";
+import SMTPTransport from "nodemailer/lib/smtp-transport";
+
+dns.setDefaultResultOrder("ipv4first");
 
 type SendEmailOptions = {
     to: string;
@@ -17,15 +21,21 @@ function getEmailTransporter() {
         throw new Error("Email environment variables are missing.");
     }
 
-    return nodemailer.createTransport({
+    const transportOptions = {
         host,
         port,
         secure: port === 465,
+        family: 4,
         auth: {
             user,
             pass,
         },
-    });
+        tls: {
+            rejectUnauthorized: true,
+        },
+    } as SMTPTransport.Options & { family: number };
+
+    return nodemailer.createTransport(transportOptions);
 }
 
 export async function sendEmail(options: SendEmailOptions) {
