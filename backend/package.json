@@ -9,7 +9,7 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage --runInBand",
     "build": "npx prisma generate && tsc -p tsconfig.build.json",
-    "start": "tsx src/server.ts",
+    "start": "node --import tsx src/server.ts",
     "prisma:migrate": "npx prisma migrate deploy",
     "prisma:seed": "npx prisma db seed"
   },
