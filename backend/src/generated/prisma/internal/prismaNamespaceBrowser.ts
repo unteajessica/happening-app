@@ -51,6 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  AuthVerificationCode: 'AuthVerificationCode',
   User: 'User',
   Category: 'Category',
   Event: 'Event',
@@ -77,6 +78,20 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const AuthVerificationCodeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  email: 'email',
+  code: 'code',
+  purpose: 'purpose',
+  expiresAt: 'expiresAt',
+  used: 'used',
+  createdAt: 'createdAt'
+} as const
+
+export type AuthVerificationCodeScalarFieldEnum = (typeof AuthVerificationCodeScalarFieldEnum)[keyof typeof AuthVerificationCodeScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {

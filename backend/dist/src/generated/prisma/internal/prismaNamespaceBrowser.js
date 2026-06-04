@@ -48,7 +48,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NullsOrder = exports.QueryMode = exports.SortOrder = exports.SuspiciousUserScalarFieldEnum = exports.ActionLogScalarFieldEnum = exports.RolePermissionScalarFieldEnum = exports.UserRoleScalarFieldEnum = exports.PermissionScalarFieldEnum = exports.AppRoleScalarFieldEnum = exports.CommentScalarFieldEnum = exports.EventScalarFieldEnum = exports.CategoryScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
+exports.NullsOrder = exports.QueryMode = exports.SortOrder = exports.SuspiciousUserScalarFieldEnum = exports.ActionLogScalarFieldEnum = exports.RolePermissionScalarFieldEnum = exports.UserRoleScalarFieldEnum = exports.PermissionScalarFieldEnum = exports.AppRoleScalarFieldEnum = exports.CommentScalarFieldEnum = exports.EventScalarFieldEnum = exports.CategoryScalarFieldEnum = exports.UserScalarFieldEnum = exports.AuthVerificationCodeScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/index-browser"));
 exports.Decimal = runtime.Decimal;
 exports.NullTypes = {
@@ -75,6 +75,7 @@ exports.JsonNull = runtime.JsonNull;
  */
 exports.AnyNull = runtime.AnyNull;
 exports.ModelName = {
+    AuthVerificationCode: 'AuthVerificationCode',
     User: 'User',
     Category: 'Category',
     Event: 'Event',
@@ -95,6 +96,16 @@ exports.TransactionIsolationLevel = runtime.makeStrictEnum({
     RepeatableRead: 'RepeatableRead',
     Serializable: 'Serializable'
 });
+exports.AuthVerificationCodeScalarFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    email: 'email',
+    code: 'code',
+    purpose: 'purpose',
+    expiresAt: 'expiresAt',
+    used: 'used',
+    createdAt: 'createdAt'
+};
 exports.UserScalarFieldEnum = {
     id: 'id',
     name: 'name',

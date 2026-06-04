@@ -384,6 +384,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
+  AuthVerificationCode: 'AuthVerificationCode',
   User: 'User',
   Category: 'Category',
   Event: 'Event',
@@ -409,10 +410,84 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "category" | "event" | "comment" | "appRole" | "permission" | "userRole" | "rolePermission" | "actionLog" | "suspiciousUser"
+    modelProps: "authVerificationCode" | "user" | "category" | "event" | "comment" | "appRole" | "permission" | "userRole" | "rolePermission" | "actionLog" | "suspiciousUser"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
+    AuthVerificationCode: {
+      payload: Prisma.$AuthVerificationCodePayload<ExtArgs>
+      fields: Prisma.AuthVerificationCodeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AuthVerificationCodeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthVerificationCodePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AuthVerificationCodeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthVerificationCodePayload>
+        }
+        findFirst: {
+          args: Prisma.AuthVerificationCodeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthVerificationCodePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AuthVerificationCodeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthVerificationCodePayload>
+        }
+        findMany: {
+          args: Prisma.AuthVerificationCodeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthVerificationCodePayload>[]
+        }
+        create: {
+          args: Prisma.AuthVerificationCodeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthVerificationCodePayload>
+        }
+        createMany: {
+          args: Prisma.AuthVerificationCodeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AuthVerificationCodeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthVerificationCodePayload>[]
+        }
+        delete: {
+          args: Prisma.AuthVerificationCodeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthVerificationCodePayload>
+        }
+        update: {
+          args: Prisma.AuthVerificationCodeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthVerificationCodePayload>
+        }
+        deleteMany: {
+          args: Prisma.AuthVerificationCodeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AuthVerificationCodeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AuthVerificationCodeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthVerificationCodePayload>[]
+        }
+        upsert: {
+          args: Prisma.AuthVerificationCodeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthVerificationCodePayload>
+        }
+        aggregate: {
+          args: Prisma.AuthVerificationCodeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAuthVerificationCode>
+        }
+        groupBy: {
+          args: Prisma.AuthVerificationCodeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AuthVerificationCodeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AuthVerificationCodeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AuthVerificationCodeCountAggregateOutputType> | number
+        }
+      }
+    }
     User: {
       payload: Prisma.$UserPayload<ExtArgs>
       fields: Prisma.UserFieldRefs
@@ -1192,6 +1267,20 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const AuthVerificationCodeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  email: 'email',
+  code: 'code',
+  purpose: 'purpose',
+  expiresAt: 'expiresAt',
+  used: 'used',
+  createdAt: 'createdAt'
+} as const
+
+export type AuthVerificationCodeScalarFieldEnum = (typeof AuthVerificationCodeScalarFieldEnum)[keyof typeof AuthVerificationCodeScalarFieldEnum]
+
+
 export const UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -1377,16 +1466,16 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
- * Reference to a field of type 'Role'
+ * Reference to a field of type 'VerificationCodePurpose'
  */
-export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role'>
+export type EnumVerificationCodePurposeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VerificationCodePurpose'>
     
 
 
 /**
- * Reference to a field of type 'Role[]'
+ * Reference to a field of type 'VerificationCodePurpose[]'
  */
-export type ListEnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role[]'>
+export type ListEnumVerificationCodePurposeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VerificationCodePurpose[]'>
     
 
 
@@ -1401,6 +1490,27 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'Role'
+ */
+export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role'>
+    
+
+
+/**
+ * Reference to a field of type 'Role[]'
+ */
+export type ListEnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role[]'>
     
 
 
@@ -1541,6 +1651,7 @@ export type PrismaClientOptions = ({
   queryPlanCacheMaxSize?: number
 }
 export type GlobalOmitConfig = {
+  authVerificationCode?: Prisma.AuthVerificationCodeOmit
   user?: Prisma.UserOmit
   category?: Prisma.CategoryOmit
   event?: Prisma.EventOmit

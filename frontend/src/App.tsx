@@ -13,6 +13,7 @@ import PickYourNightPage from './pages/PickYourNightPage'
 import SpliViewPage from './pages/SplitViewPage'
 import ChatPage from "./pages/ChatPage";
 import ObservationListPage from "./pages/ObservationListPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
       <Route path="/landing-page" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/events-table" element={<EventsTablePage />} />
       <Route path="/add-event" element={<AddEventPage />} />
       <Route path="/event-details/:id" element={<EventDetailsPage />} />

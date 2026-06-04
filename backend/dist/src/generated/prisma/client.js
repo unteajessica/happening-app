@@ -61,8 +61,8 @@ __exportStar(require("./enums.ts"), exports);
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more Users
- * const users = await prisma.user.findMany()
+ * // Fetch zero or more AuthVerificationCodes
+ * const authVerificationCodes = await prisma.authVerificationCode.findMany()
  * ```
  *
  * Read more in our [docs](https://pris.ly/d/client).

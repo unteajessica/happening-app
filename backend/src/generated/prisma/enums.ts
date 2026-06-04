@@ -17,6 +17,14 @@ export const Role = {
 export type Role = (typeof Role)[keyof typeof Role]
 
 
+export const VerificationCodePurpose = {
+  LOGIN: 'LOGIN',
+  PASSWORD_RESET: 'PASSWORD_RESET'
+} as const
+
+export type VerificationCodePurpose = (typeof VerificationCodePurpose)[keyof typeof VerificationCodePurpose]
+
+
 export const SuspiciousUserStatus = {
   ACTIVE: 'ACTIVE',
   REVIEWED: 'REVIEWED',

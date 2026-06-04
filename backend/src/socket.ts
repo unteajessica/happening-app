@@ -13,11 +13,25 @@ type SendChatMessagePayload = {
     message: string;
 };
 
+const allowedOrigins = [
+    "https://localhost:5173",
+    "http://localhost:5173",
+    process.env.FRONTEND_URL,
+].filter(Boolean) as string[];
+
 export function initSocket(server: HttpServer) {
     io = new Server(server, {
         cors: {
-            origin: "*",
-            methods: ["GET", "POST"],
+            origin: (origin, callback) => {
+                if (!origin || allowedOrigins.includes(origin)) {
+                    callback(null, true);
+                    return;
+                }
+
+                callback(new Error(`Socket.IO CORS blocked origin: ${origin}`));
+            },
+            methods: ["GET", "POST", "PUT", "DELETE"],
+            credentials: true,
         },
     });
 
@@ -63,8 +77,9 @@ export function initSocket(server: HttpServer) {
                     socket.emit("chat:error", {
                         message: "User not found.",
                     });
-                return;
-}
+                    return;
+                }
+
                 const roomId = payload.roomId || "global";
                 const trimmedMessage = payload.message.trim();
 

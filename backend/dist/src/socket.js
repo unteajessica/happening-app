@@ -9,11 +9,23 @@ const suspicious_service_1 = require("./services/suspicious.service");
 const authToken_1 = require("./utils/authToken");
 const prisma_1 = require("./db/prisma");
 let io = null;
+const allowedOrigins = [
+    "https://localhost:5173",
+    "http://localhost:5173",
+    process.env.FRONTEND_URL,
+].filter(Boolean);
 function initSocket(server) {
     io = new socket_io_1.Server(server, {
         cors: {
-            origin: "*",
-            methods: ["GET", "POST"],
+            origin: (origin, callback) => {
+                if (!origin || allowedOrigins.includes(origin)) {
+                    callback(null, true);
+                    return;
+                }
+                callback(new Error(`Socket.IO CORS blocked origin: ${origin}`));
+            },
+            methods: ["GET", "POST", "PUT", "DELETE"],
+            credentials: true,
         },
     });
     io.use((socket, next) => {

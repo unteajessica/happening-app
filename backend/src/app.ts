@@ -11,7 +11,26 @@ import logsRoutes from "./routes/logs.routes";
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = [
+    "https://localhost:5173",
+    "http://localhost:5173",
+    process.env.FRONTEND_URL,
+].filter(Boolean) as string[];
+
+app.use(
+    cors({
+        origin: (origin, callback) => {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+                return;
+            }
+
+            callback(new Error(`CORS blocked origin: ${origin}`));
+        },
+        credentials: true,
+    })
+);
+
 app.use(express.json());
 
 app.use("/events", eventsRoutes);

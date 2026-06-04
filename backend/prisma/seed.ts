@@ -430,12 +430,14 @@ async function main() {
 
     const adminPassword = await bcrypt.hash("admin123", 10);
     const userPassword = await bcrypt.hash("user123", 10);
+    const demoAdminEmail = process.env.DEMO_ADMIN_EMAIL || "admin@test.com";
+    const demoUserEmail = process.env.DEMO_USER_EMAIL || "user@test.com";
 
     const admin = await prisma.user.create({
         data: {
             id: 1,
             name: "Admin",
-            email: "admin@test.com",
+            email: demoAdminEmail,
             passwordHash: adminPassword,
             role: Role.ADMIN,
         },
@@ -445,7 +447,7 @@ async function main() {
         data: {
             id: 2,
             name: "Regular User",
-            email: "user@test.com",
+            email: demoUserEmail,
             passwordHash: userPassword,
             role: Role.USER,
         },

@@ -8,6 +8,7 @@ import {
 import {
     loginRequest,
     registerRequest,
+    verifyLoginRequest,
     type LoggedInUser,
 } from "../services/authApi";
 
@@ -15,6 +16,7 @@ type AuthContextType = {
     currentUser: LoggedInUser | null;
     isAuthenticated: boolean;
     login: (email: string, password: string) => Promise<void>;
+    verifyLogin: (email: string, code: string) => Promise<void>;
     register: (name: string, email: string, password: string) => Promise<void>;
     logout: () => void;
     hasPermission: (permission: string) => boolean;
@@ -29,7 +31,7 @@ const TOKEN_STORAGE_KEY = "happening_auth_token";
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [currentUser, setCurrentUser] = useState<LoggedInUser | null>(null);
 
-    const INACTIVITY_TIMEOUT_MS = 15 * 60 * 1000; // test: 30 seconds
+    const INACTIVITY_TIMEOUT_MS = 15 * 60 * 1000; // final: 15 minutes
 
     const logout = () => {
         setCurrentUser(null);
@@ -91,7 +93,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, [currentUser]);
 
     const login = async (email: string, password: string) => {
-        const response = await loginRequest(email, password);
+        await loginRequest(email, password);
+    };
+
+    const verifyLogin = async (email: string, code: string) => {
+        const response = await verifyLoginRequest(email, code);
 
         setCurrentUser(response.user);
         localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(response.user));
@@ -120,6 +126,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 currentUser,
                 isAuthenticated: currentUser !== null,
                 login,
+                verifyLogin,
                 register,
                 logout,
                 hasPermission,

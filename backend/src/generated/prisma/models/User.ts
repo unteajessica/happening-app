@@ -237,6 +237,7 @@ export type UserWhereInput = {
   userRoles?: Prisma.UserRoleListRelationFilter
   actionLogs?: Prisma.ActionLogListRelationFilter
   suspiciousRecords?: Prisma.SuspiciousUserListRelationFilter
+  verificationCodes?: Prisma.AuthVerificationCodeListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -252,6 +253,7 @@ export type UserOrderByWithRelationInput = {
   userRoles?: Prisma.UserRoleOrderByRelationAggregateInput
   actionLogs?: Prisma.ActionLogOrderByRelationAggregateInput
   suspiciousRecords?: Prisma.SuspiciousUserOrderByRelationAggregateInput
+  verificationCodes?: Prisma.AuthVerificationCodeOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -270,6 +272,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   userRoles?: Prisma.UserRoleListRelationFilter
   actionLogs?: Prisma.ActionLogListRelationFilter
   suspiciousRecords?: Prisma.SuspiciousUserListRelationFilter
+  verificationCodes?: Prisma.AuthVerificationCodeListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -312,6 +315,7 @@ export type UserCreateInput = {
   userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
   actionLogs?: Prisma.ActionLogCreateNestedManyWithoutUserInput
   suspiciousRecords?: Prisma.SuspiciousUserCreateNestedManyWithoutUserInput
+  verificationCodes?: Prisma.AuthVerificationCodeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -327,6 +331,7 @@ export type UserUncheckedCreateInput = {
   userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   actionLogs?: Prisma.ActionLogUncheckedCreateNestedManyWithoutUserInput
   suspiciousRecords?: Prisma.SuspiciousUserUncheckedCreateNestedManyWithoutUserInput
+  verificationCodes?: Prisma.AuthVerificationCodeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -341,6 +346,7 @@ export type UserUpdateInput = {
   userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
   actionLogs?: Prisma.ActionLogUpdateManyWithoutUserNestedInput
   suspiciousRecords?: Prisma.SuspiciousUserUpdateManyWithoutUserNestedInput
+  verificationCodes?: Prisma.AuthVerificationCodeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -356,6 +362,7 @@ export type UserUncheckedUpdateInput = {
   userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   actionLogs?: Prisma.ActionLogUncheckedUpdateManyWithoutUserNestedInput
   suspiciousRecords?: Prisma.SuspiciousUserUncheckedUpdateManyWithoutUserNestedInput
+  verificationCodes?: Prisma.AuthVerificationCodeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -385,6 +392,11 @@ export type UserUncheckedUpdateManyInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type UserScalarRelationFilter = {
+  is?: Prisma.UserWhereInput
+  isNot?: Prisma.UserWhereInput
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -425,34 +437,27 @@ export type UserSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
 }
 
-export type UserScalarRelationFilter = {
-  is?: Prisma.UserWhereInput
-  isNot?: Prisma.UserWhereInput
-}
-
 export type UserNullableScalarRelationFilter = {
   is?: Prisma.UserWhereInput | null
   isNot?: Prisma.UserWhereInput | null
 }
 
-export type StringFieldUpdateOperationsInput = {
-  set?: string
+export type UserCreateNestedOneWithoutVerificationCodesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutVerificationCodesInput, Prisma.UserUncheckedCreateWithoutVerificationCodesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutVerificationCodesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutVerificationCodesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutVerificationCodesInput, Prisma.UserUncheckedCreateWithoutVerificationCodesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutVerificationCodesInput
+  upsert?: Prisma.UserUpsertWithoutVerificationCodesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutVerificationCodesInput, Prisma.UserUpdateWithoutVerificationCodesInput>, Prisma.UserUncheckedUpdateWithoutVerificationCodesInput>
 }
 
 export type EnumRoleFieldUpdateOperationsInput = {
   set?: $Enums.Role
-}
-
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
-}
-
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
 }
 
 export type UserCreateNestedOneWithoutEventsInput = {
@@ -529,6 +534,80 @@ export type UserUpdateOneWithoutSuspiciousRecordsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSuspiciousRecordsInput, Prisma.UserUpdateWithoutSuspiciousRecordsInput>, Prisma.UserUncheckedUpdateWithoutSuspiciousRecordsInput>
 }
 
+export type UserCreateWithoutVerificationCodesInput = {
+  name: string
+  email: string
+  passwordHash: string
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  events?: Prisma.EventCreateNestedManyWithoutCreatedByInput
+  comments?: Prisma.CommentCreateNestedManyWithoutUserInput
+  userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  actionLogs?: Prisma.ActionLogCreateNestedManyWithoutUserInput
+  suspiciousRecords?: Prisma.SuspiciousUserCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutVerificationCodesInput = {
+  id?: number
+  name: string
+  email: string
+  passwordHash: string
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutCreatedByInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
+  userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  actionLogs?: Prisma.ActionLogUncheckedCreateNestedManyWithoutUserInput
+  suspiciousRecords?: Prisma.SuspiciousUserUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutVerificationCodesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutVerificationCodesInput, Prisma.UserUncheckedCreateWithoutVerificationCodesInput>
+}
+
+export type UserUpsertWithoutVerificationCodesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutVerificationCodesInput, Prisma.UserUncheckedUpdateWithoutVerificationCodesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutVerificationCodesInput, Prisma.UserUncheckedCreateWithoutVerificationCodesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutVerificationCodesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutVerificationCodesInput, Prisma.UserUncheckedUpdateWithoutVerificationCodesInput>
+}
+
+export type UserUpdateWithoutVerificationCodesInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  events?: Prisma.EventUpdateManyWithoutCreatedByNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
+  userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  actionLogs?: Prisma.ActionLogUpdateManyWithoutUserNestedInput
+  suspiciousRecords?: Prisma.SuspiciousUserUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutVerificationCodesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  events?: Prisma.EventUncheckedUpdateManyWithoutCreatedByNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
+  userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  actionLogs?: Prisma.ActionLogUncheckedUpdateManyWithoutUserNestedInput
+  suspiciousRecords?: Prisma.SuspiciousUserUncheckedUpdateManyWithoutUserNestedInput
+}
+
 export type UserCreateWithoutEventsInput = {
   name: string
   email: string
@@ -540,6 +619,7 @@ export type UserCreateWithoutEventsInput = {
   userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
   actionLogs?: Prisma.ActionLogCreateNestedManyWithoutUserInput
   suspiciousRecords?: Prisma.SuspiciousUserCreateNestedManyWithoutUserInput
+  verificationCodes?: Prisma.AuthVerificationCodeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEventsInput = {
@@ -554,6 +634,7 @@ export type UserUncheckedCreateWithoutEventsInput = {
   userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   actionLogs?: Prisma.ActionLogUncheckedCreateNestedManyWithoutUserInput
   suspiciousRecords?: Prisma.SuspiciousUserUncheckedCreateNestedManyWithoutUserInput
+  verificationCodes?: Prisma.AuthVerificationCodeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEventsInput = {
@@ -583,6 +664,7 @@ export type UserUpdateWithoutEventsInput = {
   userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
   actionLogs?: Prisma.ActionLogUpdateManyWithoutUserNestedInput
   suspiciousRecords?: Prisma.SuspiciousUserUpdateManyWithoutUserNestedInput
+  verificationCodes?: Prisma.AuthVerificationCodeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEventsInput = {
@@ -597,6 +679,7 @@ export type UserUncheckedUpdateWithoutEventsInput = {
   userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   actionLogs?: Prisma.ActionLogUncheckedUpdateManyWithoutUserNestedInput
   suspiciousRecords?: Prisma.SuspiciousUserUncheckedUpdateManyWithoutUserNestedInput
+  verificationCodes?: Prisma.AuthVerificationCodeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCommentsInput = {
@@ -610,6 +693,7 @@ export type UserCreateWithoutCommentsInput = {
   userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
   actionLogs?: Prisma.ActionLogCreateNestedManyWithoutUserInput
   suspiciousRecords?: Prisma.SuspiciousUserCreateNestedManyWithoutUserInput
+  verificationCodes?: Prisma.AuthVerificationCodeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCommentsInput = {
@@ -624,6 +708,7 @@ export type UserUncheckedCreateWithoutCommentsInput = {
   userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   actionLogs?: Prisma.ActionLogUncheckedCreateNestedManyWithoutUserInput
   suspiciousRecords?: Prisma.SuspiciousUserUncheckedCreateNestedManyWithoutUserInput
+  verificationCodes?: Prisma.AuthVerificationCodeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCommentsInput = {
@@ -653,6 +738,7 @@ export type UserUpdateWithoutCommentsInput = {
   userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
   actionLogs?: Prisma.ActionLogUpdateManyWithoutUserNestedInput
   suspiciousRecords?: Prisma.SuspiciousUserUpdateManyWithoutUserNestedInput
+  verificationCodes?: Prisma.AuthVerificationCodeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCommentsInput = {
@@ -667,6 +753,7 @@ export type UserUncheckedUpdateWithoutCommentsInput = {
   userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   actionLogs?: Prisma.ActionLogUncheckedUpdateManyWithoutUserNestedInput
   suspiciousRecords?: Prisma.SuspiciousUserUncheckedUpdateManyWithoutUserNestedInput
+  verificationCodes?: Prisma.AuthVerificationCodeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutUserRolesInput = {
@@ -680,6 +767,7 @@ export type UserCreateWithoutUserRolesInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   actionLogs?: Prisma.ActionLogCreateNestedManyWithoutUserInput
   suspiciousRecords?: Prisma.SuspiciousUserCreateNestedManyWithoutUserInput
+  verificationCodes?: Prisma.AuthVerificationCodeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutUserRolesInput = {
@@ -694,6 +782,7 @@ export type UserUncheckedCreateWithoutUserRolesInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   actionLogs?: Prisma.ActionLogUncheckedCreateNestedManyWithoutUserInput
   suspiciousRecords?: Prisma.SuspiciousUserUncheckedCreateNestedManyWithoutUserInput
+  verificationCodes?: Prisma.AuthVerificationCodeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutUserRolesInput = {
@@ -723,6 +812,7 @@ export type UserUpdateWithoutUserRolesInput = {
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   actionLogs?: Prisma.ActionLogUpdateManyWithoutUserNestedInput
   suspiciousRecords?: Prisma.SuspiciousUserUpdateManyWithoutUserNestedInput
+  verificationCodes?: Prisma.AuthVerificationCodeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUserRolesInput = {
@@ -737,6 +827,7 @@ export type UserUncheckedUpdateWithoutUserRolesInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   actionLogs?: Prisma.ActionLogUncheckedUpdateManyWithoutUserNestedInput
   suspiciousRecords?: Prisma.SuspiciousUserUncheckedUpdateManyWithoutUserNestedInput
+  verificationCodes?: Prisma.AuthVerificationCodeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutActionLogsInput = {
@@ -750,6 +841,7 @@ export type UserCreateWithoutActionLogsInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
   suspiciousRecords?: Prisma.SuspiciousUserCreateNestedManyWithoutUserInput
+  verificationCodes?: Prisma.AuthVerificationCodeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutActionLogsInput = {
@@ -764,6 +856,7 @@ export type UserUncheckedCreateWithoutActionLogsInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   suspiciousRecords?: Prisma.SuspiciousUserUncheckedCreateNestedManyWithoutUserInput
+  verificationCodes?: Prisma.AuthVerificationCodeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutActionLogsInput = {
@@ -793,6 +886,7 @@ export type UserUpdateWithoutActionLogsInput = {
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
   suspiciousRecords?: Prisma.SuspiciousUserUpdateManyWithoutUserNestedInput
+  verificationCodes?: Prisma.AuthVerificationCodeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutActionLogsInput = {
@@ -807,6 +901,7 @@ export type UserUncheckedUpdateWithoutActionLogsInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   suspiciousRecords?: Prisma.SuspiciousUserUncheckedUpdateManyWithoutUserNestedInput
+  verificationCodes?: Prisma.AuthVerificationCodeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSuspiciousRecordsInput = {
@@ -820,6 +915,7 @@ export type UserCreateWithoutSuspiciousRecordsInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
   actionLogs?: Prisma.ActionLogCreateNestedManyWithoutUserInput
+  verificationCodes?: Prisma.AuthVerificationCodeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSuspiciousRecordsInput = {
@@ -834,6 +930,7 @@ export type UserUncheckedCreateWithoutSuspiciousRecordsInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   actionLogs?: Prisma.ActionLogUncheckedCreateNestedManyWithoutUserInput
+  verificationCodes?: Prisma.AuthVerificationCodeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSuspiciousRecordsInput = {
@@ -863,6 +960,7 @@ export type UserUpdateWithoutSuspiciousRecordsInput = {
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
   actionLogs?: Prisma.ActionLogUpdateManyWithoutUserNestedInput
+  verificationCodes?: Prisma.AuthVerificationCodeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSuspiciousRecordsInput = {
@@ -877,6 +975,7 @@ export type UserUncheckedUpdateWithoutSuspiciousRecordsInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   actionLogs?: Prisma.ActionLogUncheckedUpdateManyWithoutUserNestedInput
+  verificationCodes?: Prisma.AuthVerificationCodeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -890,6 +989,7 @@ export type UserCountOutputType = {
   userRoles: number
   actionLogs: number
   suspiciousRecords: number
+  verificationCodes: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -898,6 +998,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   userRoles?: boolean | UserCountOutputTypeCountUserRolesArgs
   actionLogs?: boolean | UserCountOutputTypeCountActionLogsArgs
   suspiciousRecords?: boolean | UserCountOutputTypeCountSuspiciousRecordsArgs
+  verificationCodes?: boolean | UserCountOutputTypeCountVerificationCodesArgs
 }
 
 /**
@@ -945,6 +1046,13 @@ export type UserCountOutputTypeCountSuspiciousRecordsArgs<ExtArgs extends runtim
   where?: Prisma.SuspiciousUserWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountVerificationCodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AuthVerificationCodeWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -959,6 +1067,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   userRoles?: boolean | Prisma.User$userRolesArgs<ExtArgs>
   actionLogs?: boolean | Prisma.User$actionLogsArgs<ExtArgs>
   suspiciousRecords?: boolean | Prisma.User$suspiciousRecordsArgs<ExtArgs>
+  verificationCodes?: boolean | Prisma.User$verificationCodesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -999,6 +1108,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   userRoles?: boolean | Prisma.User$userRolesArgs<ExtArgs>
   actionLogs?: boolean | Prisma.User$actionLogsArgs<ExtArgs>
   suspiciousRecords?: boolean | Prisma.User$suspiciousRecordsArgs<ExtArgs>
+  verificationCodes?: boolean | Prisma.User$verificationCodesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1012,6 +1122,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     userRoles: Prisma.$UserRolePayload<ExtArgs>[]
     actionLogs: Prisma.$ActionLogPayload<ExtArgs>[]
     suspiciousRecords: Prisma.$SuspiciousUserPayload<ExtArgs>[]
+    verificationCodes: Prisma.$AuthVerificationCodePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1420,6 +1531,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   userRoles<T extends Prisma.User$userRolesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$userRolesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   actionLogs<T extends Prisma.User$actionLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$actionLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActionLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   suspiciousRecords<T extends Prisma.User$suspiciousRecordsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$suspiciousRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SuspiciousUserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  verificationCodes<T extends Prisma.User$verificationCodesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$verificationCodesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuthVerificationCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1966,6 +2078,30 @@ export type User$suspiciousRecordsArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.SuspiciousUserScalarFieldEnum | Prisma.SuspiciousUserScalarFieldEnum[]
+}
+
+/**
+ * User.verificationCodes
+ */
+export type User$verificationCodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AuthVerificationCode
+   */
+  select?: Prisma.AuthVerificationCodeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AuthVerificationCode
+   */
+  omit?: Prisma.AuthVerificationCodeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AuthVerificationCodeInclude<ExtArgs> | null
+  where?: Prisma.AuthVerificationCodeWhereInput
+  orderBy?: Prisma.AuthVerificationCodeOrderByWithRelationInput | Prisma.AuthVerificationCodeOrderByWithRelationInput[]
+  cursor?: Prisma.AuthVerificationCodeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AuthVerificationCodeScalarFieldEnum | Prisma.AuthVerificationCodeScalarFieldEnum[]
 }
 
 /**

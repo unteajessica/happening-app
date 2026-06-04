@@ -9,10 +9,14 @@
 * 🟢 You can import this file directly.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SuspiciousUserStatus = exports.Role = void 0;
+exports.SuspiciousUserStatus = exports.VerificationCodePurpose = exports.Role = void 0;
 exports.Role = {
     ADMIN: 'ADMIN',
     USER: 'USER'
+};
+exports.VerificationCodePurpose = {
+    LOGIN: 'LOGIN',
+    PASSWORD_RESET: 'PASSWORD_RESET'
 };
 exports.SuspiciousUserStatus = {
     ACTIVE: 'ACTIVE',

@@ -14,7 +14,21 @@ const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
 const chat_routes_1 = __importDefault(require("./routes/chat.routes"));
 const logs_routes_1 = __importDefault(require("./routes/logs.routes"));
 const app = (0, express_1.default)();
-app.use((0, cors_1.default)());
+const allowedOrigins = [
+    "https://localhost:5173",
+    "http://localhost:5173",
+    process.env.FRONTEND_URL,
+].filter(Boolean);
+app.use((0, cors_1.default)({
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+            return;
+        }
+        callback(new Error(`CORS blocked origin: ${origin}`));
+    },
+    credentials: true,
+}));
 app.use(express_1.default.json());
 app.use("/events", events_routes_1.default);
 app.use("/stats", stats_routes_1.default);
