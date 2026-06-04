@@ -1,8 +1,4 @@
-import dns from "dns";
-import nodemailer from "nodemailer";
-import SMTPTransport from "nodemailer/lib/smtp-transport";
-
-dns.setDefaultResultOrder("ipv4first");
+import { BrevoClient } from "@getbrevo/brevo";
 
 type SendEmailOptions = {
     to: string;
@@ -11,48 +7,44 @@ type SendEmailOptions = {
     html?: string;
 };
 
-function getEmailTransporter() {
-    const host = process.env.EMAIL_HOST;
-    const port = Number(process.env.EMAIL_PORT);
-    const user = process.env.EMAIL_USER;
-    const pass = process.env.EMAIL_PASS;
+function getBrevoClient() {
+    const apiKey = process.env.BREVO_API_KEY;
 
-    if (!host || !port || !user || !pass) {
-        throw new Error("Email environment variables are missing.");
+    if (!apiKey) {
+        throw new Error("BREVO_API_KEY is missing.");
     }
 
-    const transportOptions = {
-        host,
-        port,
-        secure: port === 465,
-        family: 4,
-        auth: {
-            user,
-            pass,
-        },
-        tls: {
-            rejectUnauthorized: true,
-        },
-    } as SMTPTransport.Options & { family: number };
-
-    return nodemailer.createTransport(transportOptions);
+    return new BrevoClient({
+        apiKey,
+    });
 }
 
-export async function sendEmail(options: SendEmailOptions) {
+function getSender() {
     const from = process.env.EMAIL_FROM;
 
     if (!from) {
-        throw new Error("EMAIL_FROM is missing from .env.");
+        throw new Error("EMAIL_FROM is missing.");
     }
 
-    const transporter = getEmailTransporter();
+    return {
+        email: from,
+        name: "Happening App",
+    };
+}
 
-    await transporter.sendMail({
-        from,
-        to: options.to,
+export async function sendEmail(options: SendEmailOptions) {
+    const client = getBrevoClient();
+
+    await client.transactionalEmails.sendTransacEmail({
+        sender: getSender(),
+        to: [
+            {
+                email: options.to,
+            },
+        ],
         subject: options.subject,
-        text: options.text,
-        html: options.html,
+        textContent: options.text,
+        htmlContent: options.html ?? options.text,
     });
 }
 
